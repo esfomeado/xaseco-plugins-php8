@@ -41,7 +41,7 @@ class FufiMenu {
 	 * @param String $xmlpath
 	 * @return FufiMenu
 	 */
-	function FufiMenu($xmlpath){
+	function __construct($xmlpath){
 		$this->manialinkID = 383;
 		$this->uniqueID = 1001;
 		$this->id = '0000';
@@ -141,7 +141,7 @@ class FufiMenu {
 	 * @param String $type
 	 * @param String $rights
 	 */
-	function addEntry($insertInGroup, $entryPoint, $insertAfter=true, $caption, $unique, $chatcmd='', $chatcmdparams='', $ability='', $indicator='', $params='', $type='', $rights=''){
+	function addEntry($insertInGroup, $entryPoint, $insertAfter, $caption, $unique, $chatcmd='', $chatcmdparams='', $ability='', $indicator='', $params='', $type='', $rights=''){
 		if ($caption!='') $caption = " caption='".$caption."'";
 		if ($unique!='') $unique = " unique='".$unique."'";
 		if ($chatcmd!='') $chatcmd = " chatcmd='".$chatcmd."'";
@@ -629,7 +629,7 @@ class FufiMenu {
 		//display caption
 		$xml = str_replace(array('%height%', '%labely%', '%caption%'),
 		array(1.9, -0.7, trim($caption)), $menucaption);
-		$result .= $xml;
+		$result = $xml;
 
 		foreach ($entries as $entry){
 			if (in_array($entry->id, $ids)){
@@ -713,7 +713,7 @@ class FufiMenuEntry{
 	 * @param int $parentid
 	 * @return FufiMenuEntry
 	 */
-	function FufiMenuEntry($xmlbranch, $parentid){
+	function __construct($xmlbranch, $parentid){
 		$this->entries = array();
 		$this->xmlbranch = $xmlbranch;
 		$this->parentid = $parentid;

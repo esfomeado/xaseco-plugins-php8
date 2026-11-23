@@ -156,14 +156,9 @@ class Client
 			curl_setopt_array($ch, $options);
 			$response = curl_exec($ch);
 			$info = curl_getinfo($ch);
-			curl_close($ch);
 		}
 		catch(Exception $e)
 		{
-			if($ch)
-			{
-				curl_close($ch);
-			}
 			throw $e;
 		}
 		

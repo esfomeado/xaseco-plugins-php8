@@ -1625,9 +1625,9 @@ function re_onSync ($aseco, $reload = null) {
 		// Check the Database-Table for existing `timezone` and `displaywidgets` column (required to store the player-preference for the Clock-Widget and display preferences)
 		$fields = array();
 		$bugfix = false;
-		$result = mysql_query('SHOW COLUMNS FROM `players_extra`;');
+		$result = $aseco->db->query('SHOW COLUMNS FROM `players_extra`;');
 		if ($result) {
-			while ($row = mysql_fetch_row($result)) {
+			while ($row = $result->fetch_row()) {
 				$fields[] = $row[0];
 
 				// Bugfix at NT-Systems from 0.9.2 release
@@ -1635,19 +1635,19 @@ function re_onSync ($aseco, $reload = null) {
 					$bugfix = ((strtoupper($row[2]) == 'NO') ? true : false);
 				}
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 		}
 
 
 		// Add `timezone` column if not yet done
 		if ( !in_array('timezone', $fields) ) {
 			$aseco->console('   + Adding column `timezone` at table `players_extra`.');
-			mysql_query('ALTER TABLE `players_extra` ADD `timezone` VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT "Added by plugin.records_eyepiece.php";');
+			$aseco->db->query('ALTER TABLE `players_extra` ADD `timezone` VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT "Added by plugin.records_eyepiece.php";');
 		}
 		else {
 			// Bugfix at NT-Systems from 0.9.2 release
 			if ($bugfix == true) {
-				mysql_query('ALTER TABLE `players_extra` CHANGE `timezone` `timezone` VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT "Added by plugin.records_eyepiece.php";');
+				$aseco->db->query('ALTER TABLE `players_extra` CHANGE `timezone` `timezone` VARCHAR(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT "Added by plugin.records_eyepiece.php";');
 			}
 			$aseco->console('   + Found column `timezone` at table `players_extra`.');
 		}
@@ -1655,7 +1655,7 @@ function re_onSync ($aseco, $reload = null) {
 		// Add `displaywidgets` column if not yet done
 		if ( !in_array('displaywidgets', $fields) ) {
 			$aseco->console('   + Adding column `displaywidgets` at table `players_extra`.');
-			mysql_query('ALTER TABLE `players_extra` ADD `displaywidgets` ENUM("true", "false") CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT "true" COMMENT "Added by plugin.records_eyepiece.php";');
+			$aseco->db->query('ALTER TABLE `players_extra` ADD `displaywidgets` ENUM("true", "false") CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT "true" COMMENT "Added by plugin.records_eyepiece.php";');
 		}
 		else {
 			$aseco->console('   + Found column `displaywidgets` at table `players_extra`.');
@@ -1664,18 +1664,18 @@ function re_onSync ($aseco, $reload = null) {
 		// Add `mostfinished` column if not yet done
 		if ( !in_array('mostfinished', $fields) ) {
 			$aseco->console('   + Adding column `mostfinished` at table `players_extra`.');
-			mysql_query('ALTER TABLE `players_extra` ADD `mostfinished` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php" AFTER `displaywidgets`, ADD INDEX (`mostfinished`);');
+			$aseco->db->query('ALTER TABLE `players_extra` ADD `mostfinished` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php" AFTER `displaywidgets`, ADD INDEX (`mostfinished`);');
 		}
 		else {
 			// Fix the unset DEFAULT VALUE
-			mysql_query('ALTER TABLE `players_extra` CHANGE `mostfinished` `mostfinished` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php";');
+			$aseco->db->query('ALTER TABLE `players_extra` CHANGE `mostfinished` `mostfinished` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php";');
 			$aseco->console('   + Found column `mostfinished` at table `players_extra`.');
 		}
 
 		// Add `mostrecords` column if not yet done
 		if ( !in_array('mostrecords', $fields) ) {
 			$aseco->console('   + Adding column `mostrecords` at table `players_extra`.');
-			mysql_query('ALTER TABLE `players_extra` ADD `mostrecords` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php" AFTER `mostfinished`, ADD INDEX (`mostrecords`);');
+			$aseco->db->query('ALTER TABLE `players_extra` ADD `mostrecords` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php" AFTER `mostfinished`, ADD INDEX (`mostrecords`);');
 		}
 		else {
 			$aseco->console('   + Found column `mostrecords` at table `players_extra`.');
@@ -1684,7 +1684,7 @@ function re_onSync ($aseco, $reload = null) {
 		// Add `roundpoints` column if not yet done
 		if ( !in_array('roundpoints', $fields) ) {
 			$aseco->console('   + Adding column `roundpoints` at table `players_extra`.');
-			mysql_query('ALTER TABLE `players_extra` ADD `roundpoints` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php" AFTER `mostrecords`, ADD INDEX (`roundpoints`);');
+			$aseco->db->query('ALTER TABLE `players_extra` ADD `roundpoints` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php" AFTER `mostrecords`, ADD INDEX (`roundpoints`);');
 		}
 		else {
 			$aseco->console('   + Found column `roundpoints` at table `players_extra`.');
@@ -1693,7 +1693,7 @@ function re_onSync ($aseco, $reload = null) {
 		// Add `visits` column if not yet done
 		if ( !in_array('visits', $fields) ) {
 			$aseco->console('   + Adding column `visits` at table `players_extra`.');
-			mysql_query('ALTER TABLE `players_extra` ADD `visits` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php" AFTER `roundpoints`, ADD INDEX (`visits`);');
+			$aseco->db->query('ALTER TABLE `players_extra` ADD `visits` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php" AFTER `roundpoints`, ADD INDEX (`visits`);');
 		}
 		else {
 			$aseco->console('   + Found column `visits` at table `players_extra`.');
@@ -1702,7 +1702,7 @@ function re_onSync ($aseco, $reload = null) {
 		// Add `winningpayout` column if not yet done
 		if ( !in_array('winningpayout', $fields) ) {
 			$aseco->console('   + Adding column `winningpayout` at table `players_extra`.');
-			mysql_query('ALTER TABLE `players_extra` ADD `winningpayout` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php" AFTER `visits`, ADD INDEX (`winningpayout`);');
+			$aseco->db->query('ALTER TABLE `players_extra` ADD `winningpayout` MEDIUMINT(3) UNSIGNED NOT NULL DEFAULT "0" COMMENT "Added by plugin.records_eyepiece.php" AFTER `visits`, ADD INDEX (`winningpayout`);');
 		}
 		else {
 			$aseco->console('   + Found column `winningpayout` at table `players_extra`.');
@@ -1711,48 +1711,48 @@ function re_onSync ($aseco, $reload = null) {
 
 		// Check the table `players_extra` for old INDEX
 		$fields = array('playerID_donations' => 0);
-		$result = mysql_query('SHOW INDEX FROM `players_extra`;');
+		$result = $aseco->db->query('SHOW INDEX FROM `players_extra`;');
 		if ($result) {
-			while ( $row = mysql_fetch_row($result) ) {
+			while ( $row = $result->fetch_row() ) {
 				if ( isset($fields[$row[2]]) ) {
 					$fields[$row[2]]++;
 				}
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 		}
 		if ($fields['playerID_donations'] != 0) {
-			mysql_query("ALTER TABLE `players_extra` DROP KEY `playerID_donations`;");
+			$aseco->db->query("ALTER TABLE `players_extra` DROP KEY `playerID_donations`;");
 		}
 
 
 		// Check the table `players` for required INDEX
 		$fields = array('Nation' => 0, 'Wins' => 0, 'UpdatedAt' => 0);
-		$result = mysql_query('SHOW INDEX FROM `players`;');
+		$result = $aseco->db->query('SHOW INDEX FROM `players`;');
 		if ($result) {
-			while ( $row = mysql_fetch_row($result) ) {
+			while ( $row = $result->fetch_row() ) {
 				if ( isset($fields[$row[2]]) ) {
 					$fields[$row[2]]++;
 				}
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 		}
 		if ($fields['Nation'] == 0) {
 			$aseco->console('   + Adding index `Nation` at table `players`.');
-			mysql_query("ALTER TABLE `players` ADD INDEX `Nation` (`Nation`);");
+			$aseco->db->query("ALTER TABLE `players` ADD INDEX `Nation` (`Nation`);");
 		}
 		else {
 			$aseco->console('   + Found index `Nation` at table `players`.');
 		}
 		if ($fields['Wins'] == 0) {
 			$aseco->console('   + Adding index `Wins` at table `players`.');
-			mysql_query("ALTER TABLE `players` ADD INDEX `Wins` (`Wins`);");
+			$aseco->db->query("ALTER TABLE `players` ADD INDEX `Wins` (`Wins`);");
 		}
 		else {
 			$aseco->console('   + Found index `Wins` at table `players`.');
 		}
 		if ($fields['UpdatedAt'] == 0) {
 			$aseco->console('   + Adding index `UpdatedAt` at table `players`.');
-			mysql_query('ALTER TABLE `players` ADD INDEX `UpdatedAt` (`UpdatedAt`);');
+			$aseco->db->query('ALTER TABLE `players` ADD INDEX `UpdatedAt` (`UpdatedAt`);');
 		}
 		else {
 			$aseco->console('   + Found index `UpdatedAt` at table `players`.');
@@ -1761,18 +1761,18 @@ function re_onSync ($aseco, $reload = null) {
 
 		// Check the table `records` for required INDEX
 		$fields = array('Score' => 0);
-		$result = mysql_query('SHOW INDEX FROM `records`;');
+		$result = $aseco->db->query('SHOW INDEX FROM `records`;');
 		if ($result) {
-			while ( $row = mysql_fetch_row($result) ) {
+			while ( $row = $result->fetch_row() ) {
 				if ( isset($fields[$row[2]]) ) {
 					$fields[$row[2]]++;
 				}
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 		}
 		if ($fields['Score'] == 0) {
 			$aseco->console('   + Adding index `Score` at table `records`.');
-			mysql_query('ALTER TABLE `records` ADD INDEX `Score` (`Score`);');
+			$aseco->db->query('ALTER TABLE `records` ADD INDEX `Score` (`Score`);');
 		}
 		else {
 			$aseco->console('   + Found index `Score` at table `records`.');
@@ -1781,21 +1781,21 @@ function re_onSync ($aseco, $reload = null) {
 
 		// Check the table `rs_karma` for required INDEX
 		$fields = array('Score' => 0, 'Score_ChallengeId' => 0);
-		$result = mysql_query('SHOW INDEX FROM `rs_karma`;');
+		$result = $aseco->db->query('SHOW INDEX FROM `rs_karma`;');
 		if ($result) {
-			while ( $row = mysql_fetch_row($result) ) {
+			while ( $row = $result->fetch_row() ) {
 				if ( isset($fields[$row[2]]) ) {
 					$fields[$row[2]]++;
 				}
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 		}
 		if ($fields['Score_ChallengeId'] != 0) {
-			mysql_query("ALTER TABLE `rs_karma` DROP KEY `Score_ChallengeId`;");
+			$aseco->db->query("ALTER TABLE `rs_karma` DROP KEY `Score_ChallengeId`;");
 		}
 		if ($fields['Score'] == 0) {
 			$aseco->console('   + Adding index `Score` at table `rs_karma`.');
-			mysql_query("ALTER TABLE `rs_karma` ADD INDEX `Score` (`Score`);");
+			$aseco->db->query("ALTER TABLE `rs_karma` ADD INDEX `Score` (`Score`);");
 		}
 		else {
 			$aseco->console('   + Found index `Score` at table `rs_karma`.');
@@ -1804,18 +1804,18 @@ function re_onSync ($aseco, $reload = null) {
 
 		// Check the table `rs_times` for required INDEX
 		$fields = array('score' => 0);
-		$result = mysql_query('SHOW INDEX FROM `rs_times`;');
+		$result = $aseco->db->query('SHOW INDEX FROM `rs_times`;');
 		if ($result) {
-			while ( $row = mysql_fetch_row($result) ) {
+			while ( $row = $result->fetch_row() ) {
 				if ( isset($fields[$row[2]]) ) {
 					$fields[$row[2]]++;
 				}
 			}
-			mysql_free_result($result);
+			if ($result) $result->free();
 		}
 		if ($fields['score'] == 0) {
 			$aseco->console('   + Adding index `Score` at table `rs_times`.');
-			mysql_query("ALTER TABLE `rs_times` ADD INDEX `score` (`score`);");
+			$aseco->db->query("ALTER TABLE `rs_times` ADD INDEX `score` (`score`);");
 		}
 		else {
 			$aseco->console('   + Found index `Score` at table `rs_times`.');
@@ -1833,14 +1833,14 @@ function re_onSync ($aseco, $reload = null) {
 			FROM `rs_times`
 			GROUP BY `playerID`;
 			";
-			$res = mysql_query($query);
+			$res = $aseco->db->query($query);
 			if ($res) {
-				if (mysql_num_rows($res) > 0) {
-					while ($row = mysql_fetch_object($res)) {
+				if ($res->num_rows > 0) {
+					while ($row = $res->fetch_object()) {
 						$mostfinished[$row->playerID] = $row->Count;
 					}
 					foreach ($mostfinished as $id => $count) {
-						$res1 = mysql_query("
+						$res1 = $aseco->db->query("
 							UPDATE `players_extra`
 							SET `mostfinished` = ". $count ."
 							WHERE `playerID` = ". $id ."
@@ -1849,7 +1849,7 @@ function re_onSync ($aseco, $reload = null) {
 					}
 					unset($mostfinished);
 				}
-				mysql_free_result($res);
+				if ($res) $res->free();
 			}
 		}
 		else {
@@ -1868,14 +1868,14 @@ function re_onSync ($aseco, $reload = null) {
 			FROM `records`
 			GROUP BY `PlayerId`;
 			";
-			$res = mysql_query($query);
+			$res = $aseco->db->query($query);
 			if ($res) {
-				if (mysql_num_rows($res) > 0) {
-					while ($row = mysql_fetch_object($res)) {
+				if ($res->num_rows > 0) {
+					while ($row = $res->fetch_object()) {
 						$mostrecords[$row->PlayerId] = $row->Count;
 					}
 					foreach ($mostrecords as $id => $count) {
-						$res1 = mysql_query("
+						$res1 = $aseco->db->query("
 							UPDATE `players_extra`
 							SET `mostrecords` = ". $count ."
 							WHERE `playerID` = ". $id ."
@@ -1884,7 +1884,7 @@ function re_onSync ($aseco, $reload = null) {
 					}
 					unset($mostfinished);
 				}
-				mysql_free_result($res);
+				if ($res) $res->free();
 			}
 		}
 		else {
@@ -2198,7 +2198,7 @@ function chat_eyepiece ($aseco, $command) {
 		re_closeRaceDisplays($player->login, false);
 
 		// Store the preferences
-		mysql_query("UPDATE `players_extra` SET `displaywidgets`='false' WHERE `playerID`='". $player->id ."';");
+		$aseco->db->query("UPDATE `players_extra` SET `displaywidgets`='false' WHERE `playerID`='". $player->id ."';");
 
 		// Give feedback to the Player
 		$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($re_config['MESSAGES'][0]['WIDGETS_PREFERENCE_DISABLED'][0]), $player->login);
@@ -2228,7 +2228,7 @@ function chat_eyepiece ($aseco, $command) {
 		}
 
 		// Store the preferences
-		mysql_query("UPDATE `players_extra` SET `displaywidgets`='true' WHERE `playerID`='". $player->id ."';");
+		$aseco->db->query("UPDATE `players_extra` SET `displaywidgets`='true' WHERE `playerID`='". $player->id ."';");
 
 		// Give feedback to the Player
 		$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($re_config['MESSAGES'][0]['WIDGETS_PREFERENCE_ENABLED'][0]), $player->login);
@@ -2807,7 +2807,7 @@ function re_toggleWidgets ($aseco, $command) {
 		}
 		else {
 			// RecordWidgets are in NiceMode and can not be hidden so give feedback to the Player
-			$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($re_config['MESSAGES'][0]['TOGGLING_DISABLED'][0]), $player->login);
+			$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($re_config['MESSAGES'][0]['TOGGLING_DISABLED'][0]), $command['author']->login);
 		}
 	}
 }
@@ -3098,7 +3098,7 @@ function re_onPlayerConnect ($aseco, $player) {
 	// Update the Visits, but only when Player connects and not when XAseco restarts
 	if ($aseco->startup_phase == false) {
 		$query = "UPDATE `players_extra` SET `visits`=`visits`+1 WHERE `playerID`='". $player->id ."' LIMIT 1;";
-		$result = mysql_query($query);
+		$result = $aseco->db->query($query);
 		if (!$result) {
 			$aseco->console('[plugin.records_eyepiece.php] UPDATE `Visits` at `players_extra` failed. [for statement "'. $query .'"]!');
 		}
@@ -3135,12 +3135,12 @@ function re_onPlayerConnect ($aseco, $player) {
 		$skip = false;
 		if ($re_config['WELCOME_WINDOW'][0]['HIDE'][0]['RANKED_PLAYER'][0] == true) {
 			$query = 'SELECT `avg` FROM `rs_rank` WHERE `playerID`='. $player->id .';';
-			$res = mysql_query($query);
+			$res = $aseco->db->query($query);
 			if ($res) {
-				if (mysql_num_rows($res) > 0) {
+				if ($res->num_rows > 0) {
 					$skip = true;
 				}
-				mysql_free_result($res);
+				if ($res) $res->free();
 			}
 		}
 		if ($skip == false) {
@@ -3294,14 +3294,14 @@ function re_onPlayerConnect2 ($aseco, $player) {
 		WHERE `playerID`='". $player->id ."'
 		LIMIT 1;
 		";
-		$res = mysql_query($query);
+		$res = $aseco->db->query($query);
 		if ($res) {
-			if (mysql_num_rows($res) > 0) {
-				while ($row = mysql_fetch_object($res)) {
+			if ($res->num_rows > 0) {
+				while ($row = $res->fetch_object()) {
 					$visits = $row->visits;
 				}
 			}
-			mysql_free_result($res);
+			if ($res) $res->free();
 		}
 
 		// Define Admin/Player title
@@ -3496,7 +3496,7 @@ function re_onPlayerFinish1 ($aseco, $finish_item) {
 
 	// Increase finish count for this Player (required for MostFinished List at Score and in the TopLists
 	$query = "UPDATE `players_extra` SET `mostfinished`=`mostfinished`+1 WHERE `playerID`='". $player->id ."';";
-	$result = mysql_query($query);
+	$result = $aseco->db->query($query);
 	if (!$result) {
 		$aseco->console('[plugin.records_eyepiece.php] UPDATE `mostfinished` at `players_extra` failed. [for statement "'. $query .'"]!');
 	}
@@ -4275,7 +4275,7 @@ function re_onPlayerManialinkPageAnswer ($aseco, $answer) {
 			$player->data['RecordsEyepiece']['Prefs']['TimezoneDisplay'] = $timezone_display;
 			$player->data['RecordsEyepiece']['Prefs']['TimezoneRealname'] = $timezone_realname;
 
-			mysql_query("UPDATE `players_extra` SET `timezone`='". $timezone_display.'|'.$timezone_realname ."' WHERE `playerID`='". $player->id ."';");
+			$aseco->db->query("UPDATE `players_extra` SET `timezone`='". $timezone_display.'|'.$timezone_realname ."' WHERE `playerID`='". $player->id ."';");
 
 			// Refresh the clock for this Player
 			$widgets .= re_buildClockWidget($player);
@@ -4506,7 +4506,7 @@ function re_onLocalRecord ($aseco, $finish_item) {
 
 		// Increase Record count for this Player
 		$query = "UPDATE `players_extra` SET `mostrecords`=`mostrecords`+1 WHERE `playerID`='". $player->id ."';";
-		$result = mysql_query($query);
+		$result = $aseco->db->query($query);
 		if (!$result) {
 			$aseco->console('[plugin.records_eyepiece.php] UPDATE `mostrecords` at `players_extra` failed. [for statement "'. $query .'"]!');
 		}
@@ -7813,7 +7813,7 @@ function re_buildWinningPayoutWidget () {
 
 			// ...only if one Player has a Score
 			if (count($playerids) > 0) {
-				$result = mysql_query($query);
+				$result = $aseco->db->query($query);
 				if (!$result) {
 					$aseco->console('UPDATE `players_extra` row `winningpayout` failed: [for statement "'. str_replace("\t", '', $query) .'"]');
 				}
@@ -8092,22 +8092,22 @@ function re_getLiveRankings ($gamemode) {
 */
 
 function re_getVisitors () {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	$query = 'SELECT MAX(`Id`) AS `PlayerCount` FROM `players`;';
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['Visitors'] = 0;
 
-			if ($row = mysql_fetch_object($res)) {
+			if ($row = $res->fetch_object()) {
 				$re_scores['Visitors'] = re_formatNumber((int)$row->PlayerCount, 0);
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8118,7 +8118,7 @@ function re_getVisitors () {
 */
 
 function re_getTopRankings ($limit = 100) {
-	global $re_scores;
+	global $aseco, $re_scores;
 
 
 	$query = '
@@ -8132,14 +8132,14 @@ function re_getTopRankings ($limit = 100) {
 	ORDER BY `r`.`avg` ASC
 	LIMIT '. $limit .';';
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['TopRankings'] = array();
 
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['TopRankings'][$i]['login']		= $row->Login;
 				$re_scores['TopRankings'][$i]['nickname']	= re_handleSpecialChars($row->NickName);
 				$re_scores['TopRankings'][$i]['score']		= sprintf("%.1f", $row->avg);
@@ -8147,7 +8147,7 @@ function re_getTopRankings ($limit = 100) {
 				$i++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8158,7 +8158,7 @@ function re_getTopRankings ($limit = 100) {
 */
 
 function re_getTopWinners ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	$query = '
@@ -8171,14 +8171,14 @@ function re_getTopWinners ($limit = 100) {
 	ORDER BY `p`.`Wins` DESC
 	LIMIT '. $limit .';';
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['TopWinners'] = array();
 
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['TopWinners'][$i]['login']		= $row->Login;
 				$re_scores['TopWinners'][$i]['nickname']	= re_handleSpecialChars($row->NickName);
 				$re_scores['TopWinners'][$i]['score']		= re_formatNumber((int)$row->Wins, 0);
@@ -8186,7 +8186,7 @@ function re_getTopWinners ($limit = 100) {
 				$i++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8197,7 +8197,7 @@ function re_getTopWinners ($limit = 100) {
 */
 
 function re_getMostRecords ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	$query = '
@@ -8211,14 +8211,14 @@ function re_getMostRecords ($limit = 100) {
 	LIMIT '. $limit .';
 	';
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['MostRecords'] = array();
 
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['MostRecords'][$i]['login']		= $row->Login;
 				$re_scores['MostRecords'][$i]['nickname']	= re_handleSpecialChars($row->NickName);
 				$re_scores['MostRecords'][$i]['score']		= re_formatNumber((int)$row->mostrecords, 0);
@@ -8227,7 +8227,7 @@ function re_getMostRecords ($limit = 100) {
 				$i++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8238,7 +8238,7 @@ function re_getMostRecords ($limit = 100) {
 */
 
 function re_getMostFinished ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	$query = '
@@ -8252,14 +8252,14 @@ function re_getMostFinished ($limit = 100) {
 	LIMIT '. $limit .';
 	';
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['MostFinished'] = array();
 
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['MostFinished'][$i]['login']		= $row->Login;
 				$re_scores['MostFinished'][$i]['nickname']	= re_handleSpecialChars($row->NickName);
 				$re_scores['MostFinished'][$i]['score']		= re_formatNumber((int)$row->mostfinished, 0);
@@ -8267,7 +8267,7 @@ function re_getMostFinished ($limit = 100) {
 				$i++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8278,7 +8278,7 @@ function re_getMostFinished ($limit = 100) {
 */
 
 function re_getTopPlaytime ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	$query = '
@@ -8291,14 +8291,14 @@ function re_getTopPlaytime ($limit = 100) {
 	ORDER BY `TimePlayed` DESC
 	LIMIT '. $limit .';';
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['TopPlaytime'] = array();
 
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['TopPlaytime'][$i]['login']		= $row->Login;
 				$re_scores['TopPlaytime'][$i]['nickname']	= re_handleSpecialChars($row->NickName);
 				$re_scores['TopPlaytime'][$i]['score']		= re_formatNumber(round($row->TimePlayed / 3600), 0).' h';
@@ -8306,7 +8306,7 @@ function re_getTopPlaytime ($limit = 100) {
 				$i++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8317,7 +8317,7 @@ function re_getTopPlaytime ($limit = 100) {
 */
 
 function re_getTopDonators ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	$query = '
@@ -8331,14 +8331,14 @@ function re_getTopDonators ($limit = 100) {
 	ORDER BY `pe`.`donations` DESC
 	LIMIT '. $limit .';';
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['TopDonators'] = array();
 
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['TopDonators'][$i]['login']		= $row->Login;
 				$re_scores['TopDonators'][$i]['nickname']	= re_handleSpecialChars($row->NickName);
 				$re_scores['TopDonators'][$i]['score']		= re_formatNumber((int)$row->donations, 0);
@@ -8347,7 +8347,7 @@ function re_getTopDonators ($limit = 100) {
 				$i++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8358,7 +8358,7 @@ function re_getTopDonators ($limit = 100) {
 */
 
 function re_getNationList ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	$query = '
@@ -8376,21 +8376,21 @@ function re_getNationList ($limit = 100) {
 		'CAR'	=> 'CMR'
 	);
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['TopNations'] = array();
 
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['TopNations'][$i]['nation']		= (isset($flagfix[$row->Nation]) ? $flagfix[$row->Nation] : $row->Nation);
 				$re_scores['TopNations'][$i]['score']		= re_formatNumber((int)$row->Count, 0);
 
 				$i++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8452,7 +8452,7 @@ function re_getTopTracks () {
 */
 
 function re_getTopVoters ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	$query = '
@@ -8466,14 +8466,14 @@ function re_getTopVoters ($limit = 100) {
 	ORDER BY `vote_count` DESC
 	LIMIT '. $limit .';';
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['TopVoters'] = array();
 
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['TopVoters'][$i]['score']		= re_formatNumber((int)$row->vote_count, 0);
 				$re_scores['TopVoters'][$i]['login']		= $row->login;
 				$re_scores['TopVoters'][$i]['nickname']		= re_handleSpecialChars($row->nickname);
@@ -8483,7 +8483,7 @@ function re_getTopVoters ($limit = 100) {
 
 			$re_config['States']['TopVoters']['NeedUpdate'] = false;
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8494,7 +8494,7 @@ function re_getTopVoters ($limit = 100) {
 */
 
 function re_getTopBetwins ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	if ($re_config['SCORETABLE_LISTS'][0]['TOP_BETWINS'][0]['DISPLAY'][0] == true) {
@@ -8526,16 +8526,16 @@ function re_getTopBetwins ($limit = 100) {
 		LIMIT '. $limit .';';
 	}
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['TopBetwins'] = array();
 
 			$i = 0;
 			if ($re_config['SCORETABLE_LISTS'][0]['TOP_BETWINS'][0]['DISPLAY'][0] == true) {
 				// Wanna have the average
-				while ($row = mysql_fetch_object($res)) {
+				while ($row = $res->fetch_object()) {
 					$re_scores['TopBetwins'][$i]['login']		= $row->Login;
 					$re_scores['TopBetwins'][$i]['nickname']	= re_handleSpecialChars($row->NickName);
 					$re_scores['TopBetwins'][$i]['won']		= sprintf("%.2f", $row->won);
@@ -8545,7 +8545,7 @@ function re_getTopBetwins ($limit = 100) {
 			}
 			else {
 				// Wanna have the Coppers
-				while ($row = mysql_fetch_object($res)) {
+				while ($row = $res->fetch_object()) {
 					$re_scores['TopBetwins'][$i]['login']		= $row->Login;
 					$re_scores['TopBetwins'][$i]['nickname']	= re_handleSpecialChars($row->NickName);
 					$re_scores['TopBetwins'][$i]['won']		= re_formatNumber((int)$row->won, 0) .' C';
@@ -8554,7 +8554,7 @@ function re_getTopBetwins ($limit = 100) {
 				}
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8565,7 +8565,7 @@ function re_getTopBetwins ($limit = 100) {
 */
 
 function re_getTopWinningPayout ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	// Get the Coppers
@@ -8581,15 +8581,15 @@ function re_getTopWinningPayout ($limit = 100) {
 	ORDER BY `won` DESC
 	LIMIT '. $limit .';';
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['TopWinningPayout'] = array();
 
 			// Wanna have the Coppers
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['TopWinningPayout'][$i]['login']	= $row->Login;
 				$re_scores['TopWinningPayout'][$i]['nickname']	= re_handleSpecialChars($row->NickName);
 				$re_scores['TopWinningPayout'][$i]['won']	= re_formatNumber((int)$row->won, 0) .' C';
@@ -8597,7 +8597,7 @@ function re_getTopWinningPayout ($limit = 100) {
 				$i++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8608,7 +8608,7 @@ function re_getTopWinningPayout ($limit = 100) {
 */
 
 function re_getTopRoundscore ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	$query = '
@@ -8622,14 +8622,14 @@ function re_getTopRoundscore ($limit = 100) {
 	ORDER BY `RoundPoints` DESC
 	LIMIT '. $limit .';';
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['TopRoundscore'] = array();
 
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['TopRoundscore'][$i]['score']		= re_formatNumber((int)$row->roundpoints, 0);
 				$re_scores['TopRoundscore'][$i]['login']		= $row->Login;
 				$re_scores['TopRoundscore'][$i]['nickname']		= re_handleSpecialChars($row->NickName);
@@ -8637,7 +8637,7 @@ function re_getTopRoundscore ($limit = 100) {
 				$i++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8648,7 +8648,7 @@ function re_getTopRoundscore ($limit = 100) {
 */
 
 function re_getTopVisitors ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	$query = "
@@ -8663,14 +8663,14 @@ function re_getTopVisitors ($limit = 100) {
 	LIMIT ". $limit .";
 	";
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['TopVisitors'] = array();
 
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['TopVisitors'][$i]['score']		= re_formatNumber((int)$row->visits, 0);
 				$re_scores['TopVisitors'][$i]['login']		= $row->Login;
 				$re_scores['TopVisitors'][$i]['nickname']	= re_handleSpecialChars($row->NickName);
@@ -8678,7 +8678,7 @@ function re_getTopVisitors ($limit = 100) {
 				$i++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8689,7 +8689,7 @@ function re_getTopVisitors ($limit = 100) {
 */
 
 function re_getTopActivePlayers ($limit = 100) {
-	global $re_config, $re_scores;
+	global $aseco, $re_config, $re_scores;
 
 
 	$query = "
@@ -8703,14 +8703,14 @@ function re_getTopActivePlayers ($limit = 100) {
 	LIMIT ". $limit .";
 	";
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			// Clean before filling
 			$re_scores['TopActivePlayers'] = array();
 
 			$i = 0;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				$re_scores['TopActivePlayers'][$i]['login']		= $row->Login;
 				$re_scores['TopActivePlayers'][$i]['nickname']		= re_handleSpecialChars($row->NickName);
 				$re_scores['TopActivePlayers'][$i]['score']		= (($row->Days == 0) ? 'Today' : re_formatNumber(-$row->Days, 0) .' d');
@@ -8719,7 +8719,7 @@ function re_getTopActivePlayers ($limit = 100) {
 				$i++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -8780,8 +8780,8 @@ function re_getMusicServerPlaylist ($only_refresh = false) {
 				$re_cache['MusicServerPlaylist'][] = array(
 					'SongId'	=> $id,
 					'File'		=> $song,
-					'Artist'	=> '$Z'. re_handleSpecialChars(utf8_decode($music_server->tags[$song]['Artist'])),
-					'Title'		=> '$Z'. re_handleSpecialChars(utf8_decode($music_server->tags[$song]['Title']))
+					'Artist'	=> '$Z'. re_handleSpecialChars(mb_convert_encoding($music_server->tags[$song]['Artist'], 'ISO-8859-1', 'UTF-8')),
+					'Title'		=> '$Z'. re_handleSpecialChars(mb_convert_encoding($music_server->tags[$song]['Title'], 'ISO-8859-1', 'UTF-8'))
 				);
 			}
 			else {
@@ -8824,13 +8824,13 @@ function re_getMusicServerPlaylist ($only_refresh = false) {
 				$re_cache['MusicServerPlaylist'][] = array(
 					'SongId'	=> $id,
 					'File'		=> $song,
-					'Artist'	=> '$Z'. re_handleSpecialChars(utf8_decode(ucwords($artist))),
-					'Title'		=> '$Z'. re_handleSpecialChars(utf8_decode(ucwords($title)))
+					'Artist'	=> '$Z'. re_handleSpecialChars(mb_convert_encoding(ucwords($artist), 'ISO-8859-1', 'UTF-8')),
+					'Title'		=> '$Z'. re_handleSpecialChars(mb_convert_encoding(ucwords($title), 'ISO-8859-1', 'UTF-8'))
 				);
 
 				// Setup the $music_server->tags also
-				$music_server->tags[$song]['Artist'] = re_handleSpecialChars(utf8_decode(ucwords($artist)));
-				$music_server->tags[$song]['Title'] = re_handleSpecialChars(utf8_decode(ucwords($title)));
+				$music_server->tags[$song]['Artist'] = re_handleSpecialChars(mb_convert_encoding(ucwords($artist), 'ISO-8859-1', 'UTF-8'));
+				$music_server->tags[$song]['Title'] = re_handleSpecialChars(mb_convert_encoding(ucwords($title), 'ISO-8859-1', 'UTF-8'));
 			}
 			$id ++;
 		}
@@ -8898,13 +8898,13 @@ function re_getPlayerLocalRecords ($pid) {
 	WHERE `r`.`Score` != ''
 	ORDER BY `r`.`ChallengeId` ASC, `Score` ". ($aseco->server->gameinfo->mode == Gameinfo::STNT ? 'DESC' : 'ASC') .",`Date` ASC;
 	";
-	$result = mysql_query($query);
+	$result = $aseco->db->query($query);
 
 	if ($result) {
 		$last = false;
 		$list = array();
 		$pos = 1;
-		while ($row = mysql_fetch_object($result)) {
+		while ($row = $result->fetch_object()) {
 
 			// Reset Rank counter
 			if ($last != $row->Uid) {
@@ -8927,7 +8927,7 @@ function re_getPlayerLocalRecords ($pid) {
 			}
 			$pos ++;
 		}
-		mysql_free_result($result);
+		if ($result) $result->free();
 	}
 
 	return $list;
@@ -8940,7 +8940,7 @@ function re_getPlayerLocalRecords ($pid) {
 */
 
 function re_getPlayerUnfinishedTracks ($pid) {
-	global $re_cache;
+	global $aseco, $re_cache;
 
 
 	// Get list of finished Tracks
@@ -8952,15 +8952,15 @@ function re_getPlayerUnfinishedTracks ($pid) {
 	GROUP BY `challengeID`
 	ORDER BY `challengeID`;
 	';
-	$result = mysql_query($query);
+	$result = $aseco->db->query($query);
 
 	if ($result) {
 		$finished = array();
-		if (mysql_num_rows($result) > 0) {
-			while ($row = mysql_fetch_object($result))
+		if ($result->num_rows > 0) {
+			while ($row = $result->fetch_object())
 				$finished[] = $row->challengeID;
 		}
-		mysql_free_result($result);
+		if ($result) $result->free();
 
 		if ( !empty($finished) ) {
 			// Get list of unfinished Tracks
@@ -8970,11 +8970,11 @@ function re_getPlayerUnfinishedTracks ($pid) {
 			FROM `challenges`
 			WHERE `id` NOT IN ('. implode(',', $finished) .');
 			';
-			$result = mysql_query($query);
+			$result = $aseco->db->query($query);
 
 			if ($result) {
 				$unfinished = array();
-				while ($row = mysql_fetch_object($result)) {
+				while ($row = $result->fetch_object()) {
 					// Add only Tracks that are in the Tracklist
 					foreach ($re_cache['Tracklist'] as &$track) {
 						if ($track['uid'] == $row->Uid) {
@@ -8984,7 +8984,7 @@ function re_getPlayerUnfinishedTracks ($pid) {
 					}
 					unset($track);
 				}
-				mysql_free_result($result);
+				if ($result) $result->free();
 
 				return $unfinished;
 			}
@@ -11331,7 +11331,7 @@ function re_getCloseToYouEntry ($item, $line, $topcount, $noscore, $widgetwidth)
 #///////////////////////////////////////////////////////////////////////#
 */
 
-function re_getConnectedPlayerRecord ($login, $line, $topcount, $behind_rank = false, $widgetwidth) {
+function re_getConnectedPlayerRecord ($login, $line, $topcount, $behind_rank, $widgetwidth) {
 	global $aseco, $re_config;
 
 
@@ -15516,7 +15516,7 @@ function re_buildHelpWindow ($page) {
 #///////////////////////////////////////////////////////////////////////#
 */
 
-function re_buildWelcomeWindow ($send = false, $login, $nickname) {
+function re_buildWelcomeWindow ($send, $login, $nickname) {
 	global $aseco, $re_config;
 
 
@@ -16477,14 +16477,14 @@ function re_loadPlayerPreferences ($player = false) {
 	$timezone = false;
 	$displaywidgets = false;
 	$query = "SELECT `Timezone`,`DisplayWidgets` FROM `players_extra` WHERE `PlayerId`='". $player->id ."';";
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
-			$row = mysql_fetch_object($res);
+		if ($res->num_rows > 0) {
+			$row = $res->fetch_object();
 			$timezone	= ((($row->Timezone != '') || ($row->Timezone == 'NULL')) ? $row->Timezone : false);
 			$displaywidgets	= $row->DisplayWidgets;
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 
 	if ($timezone != false) {
@@ -16906,7 +16906,7 @@ function re_getMapInfoGBX ($filename) {
 */
 
 function re_calculateTrackKarma () {
-	global $re_config, $re_cache;
+	global $aseco, $re_config, $re_cache;
 
 
 	$data = array();
@@ -16935,14 +16935,14 @@ function re_calculateTrackKarma () {
 			GROUP BY `c`.`Id`;
 			';
 
-			$res = mysql_query($query);
+			$res = $aseco->db->query($query);
 			if ($res) {
-				if (mysql_num_rows($res) > 0) {
-					while ($row = mysql_fetch_object($res)) {
+				if ($res->num_rows > 0) {
+					while ($row = $res->fetch_object()) {
 						$votings[$row->ChallengeId][$name] = $row->Count;
 					}
 				}
-				mysql_free_result($res);
+				if ($res) $res->free();
 			}
 		}
 		unset( $vote);
@@ -17004,15 +17004,15 @@ function re_calculateTrackKarma () {
 		GROUP BY `ChallengeId`;
 		';
 
-		$res = mysql_query($query);
+		$res = $aseco->db->query($query);
 		if ($res) {
-			if (mysql_num_rows($res) > 0) {
-				while ($row = mysql_fetch_object($res)) {
+			if ($res->num_rows > 0) {
+				while ($row = $res->fetch_object()) {
 					$data[$row->ChallengeId]['karma'] = $row->Karma;
 					$data[$row->ChallengeId]['votes'] = $row->Count;
 				}
 			}
-			mysql_free_result($res);
+			if ($res) $res->free();
 		}
 	}
 
@@ -17032,7 +17032,7 @@ function re_calculateTrackKarma () {
 */
 
 function re_loadTrackDatabaseId ($uid = false) {
-	global $re_config;
+	global $aseco, $re_config;
 
 
 	$database_ids = array();
@@ -17044,14 +17044,14 @@ function re_loadTrackDatabaseId ($uid = false) {
 	ORDER BY `dbid` ASC;
 	';
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
-			while ($row = mysql_fetch_object($res)) {
+		if ($res->num_rows > 0) {
+			while ($row = $res->fetch_object()) {
 				$database_ids[$row->uid] = $row->dbid;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 	return $database_ids;
 }
@@ -17173,7 +17173,7 @@ function re_storePlayersRoundscore () {
 
 			// Update only if one Player has a Score
 			if (count($playerids) > 0) {
-				$result = mysql_query($query);
+				$result = $aseco->db->query($query);
 				if (!$result) {
 					$aseco->console('UPDATE `players_extra` row `roundpoints` failed: [for statement "'. str_replace("\t", '', $query) .'"]');
 				}

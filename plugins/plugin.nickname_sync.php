@@ -249,11 +249,11 @@ function ns_updatePlayers ($players, $database) {
 
 		foreach ($players as $login => &$nick) {
 			// Update Player Nickname
-			$query = "UPDATE `players` SET `NickName`='". mysql_real_escape_string($nick) ."' WHERE `Login`='". mysql_real_escape_string($login) ."';";
-			$result = mysql_query($query);
+			$query = "UPDATE `players` SET `NickName`='". $aseco->db->real_escape_string($nick) ."' WHERE `Login`='". $aseco->db->real_escape_string($login) ."';";
+			$result = $aseco->db->query($query);
 
-			if (mysql_affected_rows() == -1) {
-				trigger_error('[plugin.nickname_sync.php] Could not update Player from '. $database .' Database! ('. mysql_error() .')'. CRLF .'sql = '. $query, E_USER_WARNING);
+			if ($aseco->db->affected_rows == -1) {
+				trigger_error('[plugin.nickname_sync.php] Could not update Player from '. $database .' Database! ('. $aseco->db->error .')'. CRLF .'sql = '. $query, E_USER_WARNING);
 			}
 		}
 		unset($nick);
@@ -267,23 +267,24 @@ function ns_updatePlayers ($players, $database) {
 */
 
 function ns_getPlayers ($players) {
+	global $aseco;
 
 
 	// Find Players from Players-Array in Database
 	$players = array();
 	$query = "SELECT `Login`,`NickName` FROM `players` WHERE `Login` IN ('". implode("','", array_keys($players)) ."');";
 
-	$result = mysql_query($query);
+	$result = $aseco->db->query($query);
 	if ($result) {
-		if (mysql_num_rows($result) > 0) {
-			while ($row = mysql_fetch_row($result)) {
+		if ($result->num_rows > 0) {
+			while ($row = $result->fetch_row()) {
 				// row[0] = Login, row[1] = Nickname
 				$players[$row[0]] = $row[1];
 			}
 		}
 
 		// Free up the results
-		mysql_free_result($result);
+		if ($result) $result->free();
 	}
 
 	return $players;

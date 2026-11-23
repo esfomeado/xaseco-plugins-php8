@@ -26,7 +26,7 @@ define('FREEZONE_VERSION', '1.4');
 class Freezone {
   
   public $searchupdates;
-  private $wsUser, $wsPassword, $testmode, $button, $messages, $translation, $Aseco, $interval, $MLVersion, $debuginfo, $debugmode, $notify, $gamestate;
+  private $wsUser, $wsPassword, $testmode, $button, $messages, $translation, $Aseco, $interval, $MLVersion, $debuginfo, $debugmode, $notify, $gamestate, $xml;
   protected $wsInstance, $players, $spectators, $retired, $banned, $slangWords, $tick = 0, $slangUsers = array(), $usersWatched = array(), $store = array();
 
   protected static $MLHash = '6f116833b419fe7cb9c912fdaefb774845f60e79';
@@ -355,7 +355,7 @@ class Freezone {
     $this->Aseco->client->query('GetPlayerInfo', $player->login, 2);
     $info = $this->Aseco->client->getResponse();
     
-    if(in_array($login, $this->banned)) {
+    if(in_array($player->login, $this->banned)) {
       $this->Aseco->client->query('Kick', $player->login);
     } else {
         if(!$this->testmode) {
@@ -373,18 +373,18 @@ class Freezone {
       
       if($result == 2) {
         $this->Aseco->client->query('Kick', $player->login);
-        $this->banned[] = $login;
+        $this->banned[] = $player->login;
       } else {
         if(!$player->rights) {
-          if(key_exists($player->login, $this->retired)) {
-            if(key_exists($player->login, $this->players)) {
+          if(array_key_exists($player->login, $this->retired)) {
+            if(array_key_exists($player->login, $this->players)) {
               if($this->Aseco->isSpectator($player)) {
                 $this->spectators[$player->login] = $this->players[$player->login];
               } else {
                 $this->Aseco->client->query('ForceSpectator', $player->login, 2);
                 $this->store['forcedspectators'][$player->login] = 2;
               }
-            } else if(key_exists($player->login, $this->spectators)) {
+            } else if(array_key_exists($player->login, $this->spectators)) {
               if(isset($this->retired[$player->login])) {
                 $this->showSpectator($player->login);
                 $this->spectators[$player->login] = self::$maxPlayerGame;
@@ -392,12 +392,12 @@ class Freezone {
                 $this->store['forcedspectators'][$player->login] = 1;
               } else {
                 if(!$this->Aseco->isSpectator($player)) {
-                  if($this->spectators[$login] > self::$maxPlayerGame) {
+                  if($this->spectators[$player->login] > self::$maxPlayerGame) {
                     $this->showSpectator($player->login);
                     $this->Aseco->client->query('ForceSpectator', $player->login, 1);
                     $this->store['forcedspectators'][$player->login] = 1;
                   } else {
-                    $this->players[$login] = $this->spectators[$player->login];
+                    $this->players[$player->login] = $this->spectators[$player->login];
                   }
                 }
               }

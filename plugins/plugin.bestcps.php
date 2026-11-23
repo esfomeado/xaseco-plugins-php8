@@ -31,13 +31,13 @@ $HiddenFor = array();
 
 $tab_cp_time = array();
 $finish_time = -1;
-$fic;
+$fic = null;
 
 class cp_time{
 	var $time;
 	var $nickname;
 	
-	function cp_time($time, $nickname){
+	function __construct($time, $nickname){
 		$this->time = $time;
 		$this->nickname = $nickname;
 	}
@@ -102,7 +102,7 @@ function principale_bestcps($aseco, $param){
 	$time = $param[2];
 	$cp = $param[4];
 
-	if (((!$tab_cp_time[$cp]) or ($time < $tab_cp_time[$cp]->time)) and ($cp != ($aseco->server->challenge->nbchecks-1)) and ($cp < $nb_cp_max)){
+	if (((empty($tab_cp_time[$cp])) or ($time < $tab_cp_time[$cp]->time)) and ($cp != ($aseco->server->challenge->nbchecks-1)) and ($cp < $nb_cp_max)){
 		$tab_cp_time[$cp] = new cp_time($time, $nickname);
 	}	
 }
@@ -114,7 +114,7 @@ function main_display($aseco, $record){
 #New function, mix of other scripts and some tweaks --nerve6
 function display_best_cps_0($aseco){ // affiche les best cps
 	global $tab_cp_time, $fic, $HiddenFor;
-	$texte;
+	$texte = null;
 	$min	= 0;
 	$sec	= 0; 
 	$cen	= 0; 
@@ -125,8 +125,8 @@ function display_best_cps_0($aseco){ // affiche les best cps
 	$posx_frame 	= $fic->position[0]->x; //main x position of the widget
 	$posy_frame 	= $fic->position[0]->y; //main y position of the widget
 	$amount_per_line = $fic->newline; 	//Nombre de CPS � afficher par ligne
-	$posx;
-	$posy;
+	$posx = null;
+	$posy = null;
 	
 	
 	$xml='<?xml version="1.0" encoding="UTF-8"?>';
@@ -190,7 +190,7 @@ function display_best_cps_0($aseco){ // affiche les best cps
 
 function display_best_cps_h($aseco){ // affiche les best cps
 	global $tab_cp_time, $fic;
-	$texte;
+	$texte = null;
 	$min=0;
 	$sec=0; 
 	$cen=0; 
@@ -199,7 +199,7 @@ function display_best_cps_h($aseco){ // affiche les best cps
 
 	$posx_frame = $fic->position[0]->x; //main x position of the widget
 	$posy_frame = $fic->position[0]->y; //main y position of the widget
-	$posx;	
+	$posx = null;	
 	
 	$xml='<?xml version="1.0" encoding="UTF-8"?>';
 	$xml.='<manialink id="123123456">';
@@ -235,7 +235,7 @@ function display_best_cps_h($aseco){ // affiche les best cps
 
 function display_best_cps_1($aseco){ // affiche les best cps
 	global $tab_cp_time, $fic;
-	$texte;
+	$texte = null;
 	$min=0;
 	$sec=0; 
 	$cen=0; 
@@ -244,7 +244,7 @@ function display_best_cps_1($aseco){ // affiche les best cps
 
 	$posx_frame = $fic->position[0]->x; //main x position of the widget
 	$posy_frame = $fic->position[0]->y; //main y position of the widget
-	$posx;	
+	$posx = null;	
 	
 	$xml='<?xml version="1.0" encoding="UTF-8"?>';
 	$xml.='<manialink id="123123456">';
@@ -278,7 +278,7 @@ function display_best_cps_1($aseco){ // affiche les best cps
 
 function display_best_cps_2($aseco){ // affiche les best cps
 	global $tab_cp_time, $fic;
-	$texte;
+	$texte = null;
 	$min=0;
 	$sec=0; 
 	$cen=0; 
@@ -287,13 +287,13 @@ function display_best_cps_2($aseco){ // affiche les best cps
 
 	$posx_frame = $fic->position[0]->x; //main x position of the widget
 	$posy_frame = $fic->position[0]->y; //main y position of the widget
-	$posx;	
+	$posx = null;	
 	
 	$xml='<?xml version="1.0" encoding="UTF-8"?>';
 	$xml.='<manialink id="123123456">';
 	$xml.='<frame posn="' .$posx_frame. ' ' .$posy_frame. '">';
 	$xml.='<format textsize="1"/>';
-	$tmp = $nb * 2+0.2;
+	$tmp = 0.2;  // was $nb * 2+0.2 with $nb never set
 	$xml.='<quad  posn="0 1.1" sizen="14 '.$tmp.'" halign="center" valign="top" style="Bgs1InRace" substyle="NavButton" />';
 	
 	foreach($tab_cp_time as $value){ //pour chaque enregistrement
@@ -322,7 +322,7 @@ function display_best_cps_2($aseco){ // affiche les best cps
 
 function display_best_cps_3($aseco){ // affiche les best cps
 	global $tab_cp_time, $fic;
-	$texte;
+	$texte = null;
 	$min=0;
 	$sec=0; 
 	$cen=0; 
@@ -331,7 +331,7 @@ function display_best_cps_3($aseco){ // affiche les best cps
 
 	$posx_frame = $fic->position[0]->x; //main x position of the widget
 	$posy_frame = $fic->position[0]->y; //main y position of the widget
-	$posx;	
+	$posx = null;	
 	
 	$xml='<?xml version="1.0" encoding="UTF-8"?>';
 	$xml.='<manialink id="123123456">';

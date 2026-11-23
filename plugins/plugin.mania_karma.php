@@ -2544,7 +2544,7 @@ function mk_buildPlayerVoteMarker ($player, $gamemode) {
 #///////////////////////////////////////////////////////////////////////#
 */
 
-function mk_sendConnectionStatus ($status = true, $gamemode) {
+function mk_sendConnectionStatus ($status, $gamemode) {
 	global $aseco, $mk_config;
 
 
@@ -2567,7 +2567,7 @@ function mk_sendConnectionStatus ($status = true, $gamemode) {
 #///////////////////////////////////////////////////////////////////////#
 */
 
-function mk_sendLoadingIndicator ($status = true, $gamemode) {
+function mk_sendLoadingIndicator ($status, $gamemode) {
 	global $aseco, $mk_config;
 
 
@@ -3385,13 +3385,13 @@ function mk_storeKarmaVotes () {
 			";
 
 			$updated = array();
-			$res = mysql_query($query);
+			$res = $aseco->db->query($query);
 			if ($res) {
-				if (mysql_num_rows($res) > 0) {
-					while ($row = mysql_fetch_object($res)) {
+				if ($res->num_rows > 0) {
+					while ($row = $res->fetch_object()) {
 						if ($row->VoteId > 0) {
 							$query2 = "UPDATE `rs_karma` SET `Score`='". $karma['new']['players'][$row->Login] ."' WHERE `Id`='". $row->VoteId ."';";
-							$result = mysql_query($query2);
+							$result = $aseco->db->query($query2);
 							if (!$result) {
 								$aseco->console('[plugin.mania_karma.php] Could not UPDATE karma vote for "'. $row->Login .'" [for statement "'. $query2 .'"]!');
 							}
@@ -3401,7 +3401,7 @@ function mk_storeKarmaVotes () {
 						$updated[$row->Login] = true;
 					}
 				}
-				mysql_free_result($res);
+				if ($res) $res->free();
 			}
 
 			// INSERT all other Player they did not vote before
@@ -3418,7 +3418,7 @@ function mk_storeKarmaVotes () {
 			}
 
 			if (count($values) > 0) {
-				$result = mysql_query($query2 . implode(',', $values));
+				$result = $aseco->db->query($query2 . implode(',', $values));
 				if (!$result) {
 					$aseco->console('[plugin.mania_karma.php] Could not INSERT karma votes... [for statement "'. $query2 . implode(',', $values) .'"]!');
 				}
@@ -3769,7 +3769,7 @@ function mk_handleWebaccess ($response, $type, $url, $target = false) {
 					$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $target->login);
 				}
 				else {
-					$message = '{#server}>> {#error}Connection failed with '. $response['Code'] .' ('. $response['Reason'] .') for url ['. $api_url .']' ."\n\r";
+					$message = '{#server}>> {#error}Connection failed with '. $response['Code'] .' ('. $response['Reason'] .') for url ['. $url .']' ."\n\r";
 					$aseco->client->query('ChatSendServerMessageToLogin', $aseco->formatColors($message), $target->login);
 				}
 			}
@@ -3823,11 +3823,11 @@ function mk_findPlayersLocalRecords ($map_id, $player_list) {
 	AND `t`.`ChallengeId`='". $map_id ."'
 	GROUP BY `p`.`Login`;
 	";
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
-			while ($row = mysql_fetch_object($res)) {
+		if ($res->num_rows > 0) {
+			while ($row = $res->fetch_object()) {
 				foreach ($aseco->server->players->player_list as $player) {
 					if ($player->login == $row->login) {
 						$player->data['ManiaKarma']['FinishedMapCount'] = (int)$row->count;
@@ -3835,7 +3835,7 @@ function mk_findPlayersLocalRecords ($map_id, $player_list) {
 				}
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 }
 
@@ -3912,16 +3912,16 @@ function mk_getCurrentMapInfo () {
 	SELECT
 		`Id`
 	FROM `challenges`
-	WHERE `Uid`='". mysql_real_escape_string($map['uid']) ."'
+	WHERE `Uid`='". $aseco->db->real_escape_string($map['uid']) ."'
 	LIMIT 1;
 	";
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) == 1) {
-			$row = mysql_fetch_object($res);
+		if ($res->num_rows == 1) {
+			$row = $res->fetch_object();
 			$map['id'] = $row->Id;
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 
 	return $map;
@@ -3996,10 +3996,10 @@ function mk_getLocalKarma ($MapId = false) {
 		) AS `WasteCount`;
 	";
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
-			$row = mysql_fetch_object($res);
+		if ($res->num_rows > 0) {
+			$row = $res->fetch_object();
 
 			$karma['local']['votes']['fantastic']['count']		= $row->FantasticCount;
 			$karma['local']['votes']['beautiful']['count']		= $row->BeautifulCount;
@@ -4008,7 +4008,7 @@ function mk_getLocalKarma ($MapId = false) {
 			$karma['local']['votes']['poor']['count']		= $row->PoorCount;
 			$karma['local']['votes']['waste']['count']		= $row->WasteCount;
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 
 	// Update the local $karma
@@ -4056,14 +4056,14 @@ function mk_getLocalVotes ($MapId, $login = false) {
 	AND `p`.`Login` IN (". implode(',', $logins) .");
 	";
 
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
-			while ($row = mysql_fetch_object($res)) {
+		if ($res->num_rows > 0) {
+			while ($row = $res->fetch_object()) {
 				$karma['local']['players'][$row->Login]['vote'] = (int)$row->Score;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 
 	if ($login == false) {
@@ -4311,11 +4311,11 @@ function mk_exportVotes ($player) {
 	LEFT JOIN `players` AS `p` ON `p`.`Id`=`rs`.`PlayerId`
 	ORDER BY `c`.`Uid`;
 	";
-	$res = mysql_query($query);
+	$res = $aseco->db->query($query);
 	if ($res) {
-		if (mysql_num_rows($res) > 0) {
+		if ($res->num_rows > 0) {
 			$count = 1;
-			while ($row = mysql_fetch_object($res)) {
+			while ($row = $res->fetch_object()) {
 				if ( $row->Uid ) {
 					$csv .= sprintf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 						$row->Uid,
@@ -4332,7 +4332,7 @@ function mk_exportVotes ($player) {
 				$count ++;
 			}
 		}
-		mysql_free_result($res);
+		if ($res) $res->free();
 	}
 
 	$message = "{#server}>> {#admin}Found ". number_format($count, 0, $mk_config['NumberFormat'][$mk_config['number_format']]['decimal_sep'], $mk_config['NumberFormat'][$mk_config['number_format']]['thousands_sep']) ." votes in database.";
