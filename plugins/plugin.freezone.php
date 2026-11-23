@@ -728,6 +728,7 @@ function search_update() {
   return false;
 }
 
+global $freezone;  // plugins are loaded inside a method
 $freezone = '';
 
 class SlangUser {

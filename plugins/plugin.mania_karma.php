@@ -495,7 +495,7 @@ function mk_onSync ($aseco) {
 
 	// Start an async GET request
 	$response = $mk_config['webaccess']->request($api_url, null, 'none', false, $mk_config['keepalive_min_timeout'], $mk_config['connect_timeout'], $mk_config['wait_timeout'], $mk_config['user_agent']);
-	if ($response['Code'] == 200) {
+	if (($response['Code'] ?? 0) == 200) {
 		// Read the response
 		if (!$xml = @simplexml_load_string($response['Message'], null, LIBXML_COMPACT) ) {
 			$mk_config['retrytime'] = (time() + $mk_config['retrywait']);
@@ -542,7 +542,7 @@ function mk_onSync ($aseco) {
 		// Fake import done to do not ask a MasterAdmin to export
 		$mk_config['import_done'] = true;
 
-		$aseco->console(' => Connection failed with '. $response['Code'] .' ('. $response['Reason'] .') for url ['. $api_url .'], retry again later.');
+		$aseco->console(' => Connection failed with '. ($response['Code'] ?? 0) .' ('. ($response['Reason'] ?? ($response['Error'] ?? '')) .') for url ['. $api_url .'], retry again later.');
 		$aseco->console('**********************************************************');
 	}
 
@@ -3783,7 +3783,7 @@ function mk_handleWebaccess ($response, $type, $url, $target = false) {
 			}
 		}
 		else {
-			$aseco->console('[plugin.mania_karma.php] mk_handleWebaccess() connection failed with "'. $response['Code'] .' - '. $response['Reason'] .'" for url ['. $url .']');
+			$aseco->console('[plugin.mania_karma.php] mk_handleWebaccess() connection failed with "'. ($response['Code'] ?? 0) .' - '. ($response['Reason'] ?? ($response['Error'] ?? '')) .'" for url ['. $url .']');
 			$mk_config['retrytime'] = (time() + $mk_config['retrywait']);
 			mk_sendConnectionStatus(false, $mk_config['widget']['current_state']);
 		}

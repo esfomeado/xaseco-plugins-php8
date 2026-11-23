@@ -26,6 +26,9 @@ Aseco::registerEvent('onPlayerManialinkPageAnswer', 'toggle_click');
 #command for hiding this widget --nerve6
 Aseco::addChatCommand('bestcps', 'Toggle show/hide bestcps');
 
+# plugins are loaded inside a method: declare the shared variables global
+global $HiddenFor, $tab_cp_time, $finish_time, $fic;
+
 #array for storing people who don't want to see this widget --nerve6
 $HiddenFor = array();
 

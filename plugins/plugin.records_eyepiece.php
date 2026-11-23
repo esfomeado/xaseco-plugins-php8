@@ -7283,16 +7283,16 @@ function re_buildRecordWidgets ($target = false, $force = false) {
 			}
 
 			$widgets = '';
-			if ( (($buildDedimaniaRecordsWidget == true) || ($force['DedimaniaRecords'] == true)) && ($re_config['DEDIMANIA_RECORDS'][0]['GAMEMODE'][0][$gamemode][0]['ENABLED'][0] == true) ) {
+			if ( (($buildDedimaniaRecordsWidget == true) || (!empty($force['DedimaniaRecords']))) && ($re_config['DEDIMANIA_RECORDS'][0]['GAMEMODE'][0][$gamemode][0]['ENABLED'][0] == true) ) {
 				$widgets .= re_buildDedimaniaRecordsWidget($player->login, $player->data['RecordsEyepiece']['Prefs']['WidgetEmptyEntry'], $gamemode, $re_config['DEDIMANIA_RECORDS'][0]['GAMEMODE'][0][$gamemode][0]['ENTRIES'][0]);
 			}
-			if ( (($buildUltimaniaRecordsWidget == true) || ($force['UltimaniaRecords'] == true)) && ($re_config['ULTIMANIA_RECORDS'][0]['GAMEMODE'][0][$gamemode][0]['ENABLED'][0] == true) ) {
+			if ( (($buildUltimaniaRecordsWidget == true) || (!empty($force['UltimaniaRecords']))) && ($re_config['ULTIMANIA_RECORDS'][0]['GAMEMODE'][0][$gamemode][0]['ENABLED'][0] == true) ) {
 				$widgets .= re_buildUltimaniaRecordsWidget($player->login, $player->data['RecordsEyepiece']['Prefs']['WidgetEmptyEntry'], $gamemode, $re_config['ULTIMANIA_RECORDS'][0]['GAMEMODE'][0][$gamemode][0]['ENTRIES'][0]);
 			}
-			if ( (($buildLocalRecordsWidget == true) || ($force['LocalRecords'] == true)) && ($re_config['LOCAL_RECORDS'][0]['GAMEMODE'][0][$gamemode][0]['ENABLED'][0] == true) ) {
+			if ( (($buildLocalRecordsWidget == true) || (!empty($force['LocalRecords']))) && ($re_config['LOCAL_RECORDS'][0]['GAMEMODE'][0][$gamemode][0]['ENABLED'][0] == true) ) {
 				$widgets .= re_buildLocalRecordsWidget($player->login, $player->data['RecordsEyepiece']['Prefs']['WidgetEmptyEntry'], $gamemode, $re_config['LOCAL_RECORDS'][0]['GAMEMODE'][0][$gamemode][0]['ENTRIES'][0]);
 			}
-			if ( (($buildLiveRankingsWidget == true) || ($force['LiveRankings'] == true)) && ($re_config['LIVE_RANKINGS'][0]['GAMEMODE'][0][$gamemode][0]['ENABLED'][0] == true) ) {
+			if ( (($buildLiveRankingsWidget == true) || (!empty($force['LiveRankings']))) && ($re_config['LIVE_RANKINGS'][0]['GAMEMODE'][0][$gamemode][0]['ENABLED'][0] == true) ) {
 				$widgets .= re_buildLiveRankingsWidget($player->login, $player->data['RecordsEyepiece']['Prefs']['WidgetEmptyEntry'], $gamemode, $re_config['LIVE_RANKINGS'][0]['GAMEMODE'][0][$gamemode][0]['ENTRIES'][0]);
 			}
 
@@ -16855,10 +16855,10 @@ function re_getMapInfoGBX ($filename) {
 	$track['author']	= trim($gbx->author);
 	$track['uid']		= $gbx->uid;
 	$track['mood']		= $gbx->mood;					// Sunrise, Day, Sunset, Night
-	$track['multilap']	= $gbx->multi;					// true, false
+	$track['multilap']	= $gbx->multiLap;					// true, false
 	$track['karma']		= 0;						// Preset, Karma are calculated below
 	$track['file']		= $filename;
-	$track['exever']	= $gbx->exever;
+	$track['exever']	= $gbx->exeVer;
 
 	if (strtoupper($gbx->envir) == 'SPEED') {
 		// 'Speed' same as 'Desert'
