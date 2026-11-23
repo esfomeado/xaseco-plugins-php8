@@ -5211,10 +5211,10 @@ function re_onNewChallenge2 ($aseco, $challenge_item) {
 	$re_config['Challenge']['Current']['routes']			= ((isset($aseco->server->challenge->tmx->routes) ) ? $aseco->server->challenge->tmx->routes : 'unknown');
 	$re_config['Challenge']['Current']['awards']			= ((isset($aseco->server->challenge->tmx->awards) ) ? $aseco->server->challenge->tmx->awards : 'unknown');
 	$re_config['Challenge']['Current']['section']			= ((isset($aseco->server->challenge->tmx->section) ) ? $aseco->server->challenge->tmx->section : 'unknown');
-	$re_config['Challenge']['Current']['imageurl']			= ((isset($aseco->server->challenge->tmx->imageurl) ) ? htmlspecialchars($aseco->server->challenge->tmx->imageurl .'&.jpg') : $re_config['IMAGES'][0]['NO_SCREENSHOT'][0]);
-	$re_config['Challenge']['Current']['pageurl']			= ((isset($aseco->server->challenge->tmx->pageurl) ) ? htmlspecialchars($aseco->server->challenge->tmx->pageurl) : false);
-	$re_config['Challenge']['Current']['dloadurl']			= ((isset($aseco->server->challenge->tmx->dloadurl) ) ? htmlspecialchars($aseco->server->challenge->tmx->dloadurl) : false);
-	$re_config['Challenge']['Current']['replayurl']			= ((isset($aseco->server->challenge->tmx->replayurl) ) ? htmlspecialchars($aseco->server->challenge->tmx->replayurl) : false);
+	$re_config['Challenge']['Current']['imageurl']			= ((isset($aseco->server->challenge->tmx->imageurl) ) ? htmlspecialchars($aseco->server->challenge->tmx->imageurl .'&.jpg', ENT_COMPAT) : $re_config['IMAGES'][0]['NO_SCREENSHOT'][0]);
+	$re_config['Challenge']['Current']['pageurl']			= ((isset($aseco->server->challenge->tmx->pageurl) ) ? htmlspecialchars($aseco->server->challenge->tmx->pageurl, ENT_COMPAT) : false);
+	$re_config['Challenge']['Current']['dloadurl']			= ((isset($aseco->server->challenge->tmx->dloadurl) ) ? htmlspecialchars($aseco->server->challenge->tmx->dloadurl, ENT_COMPAT) : false);
+	$re_config['Challenge']['Current']['replayurl']			= ((isset($aseco->server->challenge->tmx->replayurl) ) ? htmlspecialchars($aseco->server->challenge->tmx->replayurl, ENT_COMPAT) : false);
 
 
 	// Store the Next-Challenge
@@ -14499,7 +14499,7 @@ function re_buildTMXChallengeInfoWindow () {
 
 	$xml .= '<quad posn="2.5 -5.7 0.03" sizen="32.2 24.2" bgcolor="FFF9"/>';
 	$xml .= '<label posn="7.5 -16.5 0.04" sizen="25 2" textsize="1" text="Press DEL if can not see an Image here!"/>';
-	$xml .= '<quad posn="2.6 -5.8 0.50" sizen="32 24" image="'. htmlspecialchars($aseco->server->challenge->tmx->imageurl .'&.jpg') .'"/>';
+	$xml .= '<quad posn="2.6 -5.8 0.50" sizen="32 24" image="'. htmlspecialchars($aseco->server->challenge->tmx->imageurl .'&.jpg', ENT_COMPAT) .'"/>';
 	$xml .= '<label posn="2.9 -31 0.04" sizen="32 3" textsize="3" text="$S'. $re_config['Challenge']['Current']['name'] .'"/>';
 	$xml .= '<label posn="2.9 -33.8 0.04" sizen="32 2" textsize="2" scale="0.9" text="by '. $re_config['Challenge']['Current']['author'] .'"/>';
 
@@ -14529,7 +14529,7 @@ function re_buildTMXChallengeInfoWindow () {
 		// Make URL clickable
 		$acomment = preg_replace('#(^|[^\"=]{1})(http://|https://|ftp://)([^\s<>]+)([\s\n<>]|$)#sm', "$1\$L[$2$3]$2$3\$L$4", $acomment);
 
-		$xml .= '<label posn="2.9 -38.2 0.04" sizen="61 16" textsize="1" scale="0.9" autonewline="1" maxline="8" text="'. htmlspecialchars($acomment) .'"/>';
+		$xml .= '<label posn="2.9 -38.2 0.04" sizen="61 16" textsize="1" scale="0.9" autonewline="1" maxline="8" text="'. htmlspecialchars($acomment, ENT_COMPAT) .'"/>';
 	}
 
 	// Times
@@ -14604,14 +14604,14 @@ function re_buildTMXChallengeInfoWindow () {
 	$xml .= '<quad posn="0 0 0.3" sizen="11 5.5" image="'. $re_config['IMAGES'][0]['TMX_LOGO_NORMAL'][0] .'" imagefocus="'. $re_config['IMAGES'][0]['TMX_LOGO_FOCUS'][0] .'" url="http://www.tm-exchange.com/"/>';
 
 	// Page
-	$xml .= '<label posn="11.7 -0.3 0.04" sizen="24 2" scale="0.5" text="$FFF&#0187; Visit Track Page" url="'. htmlspecialchars($aseco->server->challenge->tmx->pageurl) .'"/>';
+	$xml .= '<label posn="11.7 -0.3 0.04" sizen="24 2" scale="0.5" text="$FFF&#0187; Visit Track Page" url="'. htmlspecialchars($aseco->server->challenge->tmx->pageurl, ENT_COMPAT) .'"/>';
 
 	// Track
-	$xml .= '<label posn="11.7 -2.2 0.04" sizen="24 2" scale="0.5" text="$FFF&#0187; Download Track" url="'. htmlspecialchars($aseco->server->challenge->tmx->dloadurl) .'"/>';
+	$xml .= '<label posn="11.7 -2.2 0.04" sizen="24 2" scale="0.5" text="$FFF&#0187; Download Track" url="'. htmlspecialchars($aseco->server->challenge->tmx->dloadurl, ENT_COMPAT) .'"/>';
 
 	// Replay
 	if ($aseco->server->challenge->tmx->replayurl) {
-		$xml .= '<label posn="11.7 -4.1 0.04" sizen="24 2" scale="0.5" text="$FFF&#0187; Download Replay" url="'. htmlspecialchars($aseco->server->challenge->tmx->replayurl) .'"/>';
+		$xml .= '<label posn="11.7 -4.1 0.04" sizen="24 2" scale="0.5" text="$FFF&#0187; Download Replay" url="'. htmlspecialchars($aseco->server->challenge->tmx->replayurl, ENT_COMPAT) .'"/>';
 	}
 	$xml .= '</frame>';
 
@@ -16371,13 +16371,9 @@ function re_calculateClock ($timezone) {
 		$date = new DateTime('now', $zone_curr);
 		$date->setTimezone($zone_want);
 		$timeformat = $date->format($re_config['CLOCK_WIDGET'][0]['TIMEFORMAT'][0]);
-		$tz = $date->getTimezone()->getTransitions();
-		if ( isset($tz[0]) ) {
-			$timezone = $tz[0]['abbr'];
-		}
-		else {
-			$timezone = 'UNKNOWN';
-		}
+		// abbreviation in effect now (getTransitions()[0] is the zone's first
+		// historic period, e.g. 'LMT' with current timezone data)
+		$timezone = $date->format('T');
 	}
 	else {
 		$timeformat = date($re_config['CLOCK_WIDGET'][0]['TIMEFORMAT'][0], time());
@@ -16603,10 +16599,10 @@ function re_getNextChallenge () {
 		$next['routes']		= ((isset($tmx->routes) ) ? $tmx->routes : 'unknown');
 		$next['awards']		= ((isset($tmx->awards) ) ? $tmx->awards : 'unknown');
 		$next['section']	= ((isset($tmx->section) ) ? $tmx->section: 'unknown');
-		$next['imageurl']	= ((isset($tmx->imageurl) ) ? htmlspecialchars($tmx->imageurl .'&.jpg') : $re_config['IMAGES'][0]['NO_SCREENSHOT'][0]);
-		$next['pageurl']	= ((isset($tmx->pageurl) ) ? htmlspecialchars($tmx->pageurl) : false);
-		$next['dloadurl']	= ((isset($tmx->dloadurl) ) ? htmlspecialchars($tmx->dloadurl) : false);
-		$next['replayurl']	= ((isset($tmx->replayurl) ) ? htmlspecialchars($tmx->replayurl) : false);
+		$next['imageurl']	= ((isset($tmx->imageurl) ) ? htmlspecialchars($tmx->imageurl .'&.jpg', ENT_COMPAT) : $re_config['IMAGES'][0]['NO_SCREENSHOT'][0]);
+		$next['pageurl']	= ((isset($tmx->pageurl) ) ? htmlspecialchars($tmx->pageurl, ENT_COMPAT) : false);
+		$next['dloadurl']	= ((isset($tmx->dloadurl) ) ? htmlspecialchars($tmx->dloadurl, ENT_COMPAT) : false);
+		$next['replayurl']	= ((isset($tmx->replayurl) ) ? htmlspecialchars($tmx->replayurl, ENT_COMPAT) : false);
 
 		return $next;
 	}
