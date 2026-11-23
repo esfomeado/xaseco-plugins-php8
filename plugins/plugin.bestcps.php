@@ -106,7 +106,7 @@ function principale_bestcps($aseco, $param){
 	$cp = $param[4];
 
 	if (((empty($tab_cp_time[$cp])) or ($time < $tab_cp_time[$cp]->time)) and ($cp != ($aseco->server->challenge->nbchecks-1)) and ($cp < $nb_cp_max)){
-		$tab_cp_time[$cp] = new cp_time($time, $nickname);
+		$tab_cp_time[$cp] = new cp_time($time, htmlspecialchars(validateUTF8String($nickname), ENT_COMPAT));  // goes into manialink XML
 	}	
 }
 
