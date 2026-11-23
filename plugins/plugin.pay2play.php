@@ -254,6 +254,18 @@ function p2p_click($aseco, $command) {  //Deal with button clicks
 	if (!($answer == $p2p['manialink'].'00' && $p2p['replay']['active']) &&
 	    !($answer == $p2p['manialink'].'01' && $p2p['skip']['active']))
 		return;
+	// no second bill: the button stays clickable until the payment is done
+	$type = ($answer == $p2p['manialink'].'00') ? 'replay' : 'skip';
+	if (in_array($type, array_column($p2p['bills'], 2)))
+		$message = '>$f00 A payment to ' . $type . ' this track is already pending';
+	elseif ($p2p[$type]['success'])
+		$message = '>$f00 This track is already being ' . ($type == 'replay' ? 'replayed' : 'skipped');
+	elseif (!empty($p2p[$type]['max']))
+		$message = '>$f00 The maximum number of replays for this track is reached';
+	if (isset($message)) {
+		$aseco->client->query('ChatSendServerMessageToLogin', $message, $login);
+		return;
+	}
 	$aseco->client->query('GetDetailedPlayerInfo', $login);
 	$player = $aseco->client->getResponse();
 	$nickname = $player['NickName'];
