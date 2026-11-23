@@ -1,7 +1,7 @@
 <?php
 Aseco::registerEvent('onSync', 'discord_onSync');
 Aseco::registerEvent('onPlayerConnect', 'discord_onPlayerConnect');
-Aseco::registerEvent('onEverySecond', 'discord_onEverySecond');
+Aseco::registerEvent('onNewChallenge', 'discord_onNewChallenge');
 Aseco::registerEvent('onPlayerManialinkPageAnswer', 'discord_onAnswer');
 
 global $discord_widget_xml;
@@ -34,7 +34,7 @@ function discord_show($aseco, $player = null) {
 
 function discord_onSync($aseco) { discord_show($aseco); }
 function discord_onPlayerConnect($aseco, $player) { discord_show($aseco, $player); }
-function discord_onEverySecond($aseco) { discord_show($aseco); }
+function discord_onNewChallenge($aseco, $challenge) { discord_show($aseco); }
 
 function discord_onAnswer($aseco, $answer) {
 	$login = $answer[1];
