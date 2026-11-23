@@ -271,8 +271,9 @@ function ns_getPlayers ($players) {
 
 
 	// Find Players from Players-Array in Database
+	$logins = array_keys($players);
 	$players = array();
-	$query = "SELECT `Login`,`NickName` FROM `players` WHERE `Login` IN ('". implode("','", array_keys($players)) ."');";
+	$query = "SELECT `Login`,`NickName` FROM `players` WHERE `Login` IN ('". implode("','", $logins) ."');";
 
 	$result = $aseco->db->query($query);
 	if ($result) {
