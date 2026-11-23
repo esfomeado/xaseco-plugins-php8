@@ -427,6 +427,8 @@ function p2p_time($aseco) { //Deal with time functions
 
 function p2p_apocalypse($aseco) { //Restore altered callvotes
 	global $p2p;
+	if (!isset($p2p['oldvotes']))  // not started yet (XAseco stopped during start-up)
+		return;
 	
 	$aseco->client->query('SetCallVoteRatios', $p2p['oldvotes']);
 }

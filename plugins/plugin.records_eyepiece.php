@@ -2166,6 +2166,10 @@ function re_onShutdown ($aseco) {
 	$aseco->client->query('ManualFlowControlEnable', false);
 
 
+	// not started yet (XAseco stopped during start-up)
+	if (empty($re_config))
+		return;
+
 	if ($re_config['WINNING_PAYOUT'][0]['ENABLED'][0] == true) {
 		foreach ($aseco->server->players->player_list as &$player) {
 			if ($re_cache['PlayerWinnings'][$player->login]['FinishPayment'] > 0) {
