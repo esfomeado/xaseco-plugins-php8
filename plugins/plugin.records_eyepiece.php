@@ -6592,6 +6592,7 @@ function re_buildClockDetailsWindow ($timezone_realname, $timezone_display, $dis
 	global $re_config;
 
 
+	$xml = '';
 	if ($display == true) {
 
 		// Frame for Filter options/Previous/Next Buttons
@@ -8898,6 +8899,7 @@ function re_getPlayerLocalRecords ($pid) {
 	WHERE `r`.`Score` != ''
 	ORDER BY `r`.`ChallengeId` ASC, `Score` ". ($aseco->server->gameinfo->mode == Gameinfo::STNT ? 'DESC' : 'ASC') .",`Date` ASC;
 	";
+	$list = array();
 	$result = $aseco->db->query($query);
 
 	if ($result) {

@@ -182,6 +182,7 @@ class FufiMenu {
 	 * @param FufiMenuEntry $entry
 	 */
 	function insertEntry($entryPoint, $insertAfter, $entry){
+		$inserted = false;
 		if (!$entryPoint){
 			if ($insertAfter){
 				$this->entries[] = $entry;
@@ -472,6 +473,7 @@ class FufiMenu {
 	 * @param int $id
 	 */
 	function displayMenu($login, $id){
+		$content = '';
 
 		//update gameinfo
 		$this->Aseco->client->query('GetCurrentGameInfo', 1);

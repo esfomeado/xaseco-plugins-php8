@@ -3153,6 +3153,8 @@ function mk_showManiaExchangeLinkWindow ($player) {
 		return;
 	}
 
+	$voted = '';
+	$cmd = '';
 	// Find the Player vote
 	switch ($karma['global']['players'][$player->login]['vote']) {
 		case 3:
@@ -4311,6 +4313,7 @@ function mk_exportVotes ($player) {
 	LEFT JOIN `players` AS `p` ON `p`.`Id`=`rs`.`PlayerId`
 	ORDER BY `c`.`Uid`;
 	";
+	$count = 0;
 	$res = $aseco->db->query($query);
 	if ($res) {
 		if ($res->num_rows > 0) {
