@@ -16369,7 +16369,15 @@ function re_calculateClock ($timezone) {
 	// Calculate Timeformat with the given Timezone
 	$zone_curr = new DateTimeZone(date_default_timezone_get());
 	$date_curr = new DateTime('now', $zone_curr);
-	$zone_want = new DateTimeZone($timezone);
+	try {
+		$zone_want = new DateTimeZone($timezone);
+	}
+	catch (Exception $e) {
+		// unknown here (e.g. an old alias without tzdata-legacy, or a stored
+		// player preference): PHP 8 throws, which stopped XAseco
+		$timezone = $re_config['CLOCK_WIDGET'][0]['DEFAULT_TIMEZONE'][0];
+		$zone_want = new DateTimeZone($timezone);
+	}
 	$date_want = new DateTime('now', $zone_want);
 	if ( $zone_curr->getOffset($date_want) != $zone_want->getOffset($date_curr) ) {
 		$date = new DateTime('now', $zone_curr);
