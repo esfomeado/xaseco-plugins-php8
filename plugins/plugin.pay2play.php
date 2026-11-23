@@ -52,7 +52,7 @@ function p2p_setup($aseco) { //Read pay2play.xml and load settings
     	$p2p['skip']['cost'] = intval($config['SKIP'][0]['COST'][0]);
     	$p2p['skip']['delay'] = intval($config['SKIP'][0]['DELAY'][0]);
     	$p2p['skip']['blink'] = ((strtolower($config['SKIP'][0]['BLINK'][0]) == 'true') ? true : false);
-    	if ($config['REPLAY'][0]['CVOTE_OFF'][0] == 'true') $votes[] = array('Command'	=> 'NextChallenge', 'Ratio' => (float)-1);
+    	if ($config['SKIP'][0]['CVOTE_OFF'][0] == 'true') $votes[] = array('Command'	=> 'NextChallenge', 'Ratio' => (float)-1);
     	$p2p['skip']['success'] = false;
     } else {
     	$p2p['skip']['active'] = false;
