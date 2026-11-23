@@ -792,7 +792,7 @@ class FufiMenuEntry{
 		$this->ability = strval($this->xmlbranch['ability']);
 		$this->unique = strval($this->xmlbranch['unique']);
 		$this->id = $fufiMenu->getUniqueID();
-		$this->rights = (strval(strtolower($this->xmlbranch['rights']) == 'tmuf'));
+		$this->rights = (strval(strtolower((string)$this->xmlbranch['rights']) == 'tmuf'));
 	}
 
 	/**
