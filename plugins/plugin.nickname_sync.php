@@ -271,7 +271,8 @@ function ns_getPlayers ($players) {
 
 
 	// Find Players from Players-Array in Database
-	$logins = array_keys($players);
+	// (logins come from Dedimania/Gerymania: escape them)
+	$logins = array_map(array($aseco->db, 'real_escape_string'), array_keys($players));
 	$players = array();
 	$query = "SELECT `Login`,`NickName` FROM `players` WHERE `Login` IN ('". implode("','", $logins) ."');";
 
