@@ -110,20 +110,20 @@ function mk_onSync ($aseco) {
 			XASECO_VERSION
 		);
 		if ( version_compare($version, $xaseco_min_version, '<') ) {
-			trigger_error('[plugin.mania_karma.php] Not supported XAseco version ('. XASECO_VERSION .')! Please update to min. version '. $xaseco_min_version .'!', E_USER_ERROR);
+			triggerFatalError('[plugin.mania_karma.php] Not supported XAseco version ('. XASECO_VERSION .')! Please update to min. version '. $xaseco_min_version .'!');
 		}
 	}
 	else {
-		trigger_error('[plugin.mania_karma.php] Can not identify the System, "XASECO_VERSION" is unset! This plugin runs only with XAseco/'. $xaseco_min_version .'+', E_USER_ERROR);
+		triggerFatalError('[plugin.mania_karma.php] Can not identify the System, "XASECO_VERSION" is unset! This plugin runs only with XAseco/'. $xaseco_min_version .'+');
 	}
 
 	if ($aseco->server->getGame() != 'TMF') {
-		trigger_error('[plugin.mania_karma.php] This plugin supports only TMF, can not start with a "'. $aseco->server->getGame() .'" Dedicated-Server!', E_USER_ERROR);
+		triggerFatalError('[plugin.mania_karma.php] This plugin supports only TMF, can not start with a "'. $aseco->server->getGame() .'" Dedicated-Server!');
 	}
 
 	// Check for dependencies
 	if ( !function_exists('ldb_loadSettings') ) {
-		trigger_error('[plugin.mania_karma.php] Missing dependent plugin, please activate "plugin.localdatabase.php" in "plugins.xml" and restart.', E_USER_ERROR);
+		triggerFatalError('[plugin.mania_karma.php] Missing dependent plugin, please activate "plugin.localdatabase.php" in "plugins.xml" and restart.');
 	}
 
 	// Check for forbidden Plugins
@@ -134,7 +134,7 @@ function mk_onSync ($aseco) {
 		foreach ($aseco->plugins as $installed_plugin) {
 			if ($plugin == $installed_plugin) {
 				// Found, trigger error
-				trigger_error('[plugin.mania_karma.php] This Plugin can not run with "'. $plugin .'" together, you have to remove "'. $plugin .'" from plugins.xml!', E_USER_ERROR);
+				triggerFatalError('[plugin.mania_karma.php] This Plugin can not run with "'. $plugin .'" together, you have to remove "'. $plugin .'" from plugins.xml!');
 			}
 		}
 	}
@@ -415,7 +415,7 @@ function mk_onSync ($aseco) {
 			$aseco->console("\t". $error->message);
 		}
 		libxml_clear_errors();
-		trigger_error("[plugin.mania_karma.php] Please copy the 'mania_karma.xml' from this Package into the XAseco directory and do not forget to edit it!", E_USER_ERROR);
+		triggerFatalError("[plugin.mania_karma.php] Please copy the 'mania_karma.xml' from this Package into the XAseco directory and do not forget to edit it!");
 	}
 	libxml_use_internal_errors(false);
 
@@ -424,17 +424,17 @@ function mk_onSync ($aseco) {
 
 
 	if ((string)$xmlcfg->urls->api_auth == '') {
-		trigger_error("[plugin.mania_karma.php] <urls><api_auth> is empty in config file 'mania_karma.xml'!", E_USER_ERROR);
+		triggerFatalError("[plugin.mania_karma.php] <urls><api_auth> is empty in config file 'mania_karma.xml'!");
 	}
 
 	if ((string)$xmlcfg->nation == '') {
-		trigger_error("[plugin.mania_karma.php] <nation> is empty in config file 'mania_karma.xml'!", E_USER_ERROR);
+		triggerFatalError("[plugin.mania_karma.php] <nation> is empty in config file 'mania_karma.xml'!");
 	}
 	else if ((string)$xmlcfg->nation == 'YOUR_SERVER_NATION') {
-		trigger_error("[plugin.mania_karma.php] <nation> is not set in config file 'mania_karma.xml'! Please change 'YOUR_SERVER_NATION' with your server nation code.", E_USER_ERROR);
+		triggerFatalError("[plugin.mania_karma.php] <nation> is not set in config file 'mania_karma.xml'! Please change 'YOUR_SERVER_NATION' with your server nation code.");
 	}
 	else if (! $iso3166Alpha3[strtoupper((string)$xmlcfg->nation)][1] ) {
-		trigger_error("[plugin.mania_karma.php] <nation> is not valid in config file 'mania_karma.xml'! Please change <nation> to valid ISO-3166 ALPHA-3 nation code!", E_USER_ERROR);
+		triggerFatalError("[plugin.mania_karma.php] <nation> is not valid in config file 'mania_karma.xml'! Please change <nation> to valid ISO-3166 ALPHA-3 nation code!");
 	}
 
 

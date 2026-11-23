@@ -79,20 +79,20 @@ function pbme_onSync ($aseco) {
 			XASECO_VERSION
 		);
 		if ( version_compare($version, $xaseco_min_version, '<') ) {
-			trigger_error('[plugin.personal_best_medals.php] Not supported XAseco version ('. $version .')! Please update to min. version '. $xaseco_min_version .'!', E_USER_ERROR);
+			triggerFatalError('[plugin.personal_best_medals.php] Not supported XAseco version ('. $version .')! Please update to min. version '. $xaseco_min_version .'!');
 		}
 	}
 	else {
-		trigger_error('[plugin.personal_best_medals.php] Can not identify the System, "XASECO_VERSION" is unset! This plugin runs only with XAseco/'. $xaseco_min_version .'+', E_USER_ERROR);
+		triggerFatalError('[plugin.personal_best_medals.php] Can not identify the System, "XASECO_VERSION" is unset! This plugin runs only with XAseco/'. $xaseco_min_version .'+');
 	}
 
 	if ($aseco->server->getGame() != 'TMF') {
-		trigger_error('[plugin.personal_best_medals.php] This plugin supports only TMF, can not start with a "'. $aseco->server->getGame() .'" Dedicated-Server!', E_USER_ERROR);
+		triggerFatalError('[plugin.personal_best_medals.php] This plugin supports only TMF, can not start with a "'. $aseco->server->getGame() .'" Dedicated-Server!');
 	}
 
 	// Read Configuration
 	if (!$pbme_config = $aseco->xml_parser->parseXML('personal_best_medals.xml', true, true)) {
-		trigger_error('[plugin.personal_best_medals.php] Could not read/parse config file "personal_best_medals.xml"!', E_USER_ERROR);
+		triggerFatalError('[plugin.personal_best_medals.php] Could not read/parse config file "personal_best_medals.xml"!');
 	}
 	$pbme_config = $pbme_config['PERSONAL_BEST_MEDALS'];
 
@@ -123,7 +123,7 @@ function pbme_onSync ($aseco) {
 				continue 2;
 			}
 		}
-		trigger_error('[plugin.personal_best_medals.php] Unmet requirements! With your current configuration you need to activate "'. $plugin .'" in your "plugins.xml" to run this Plugin!', E_USER_ERROR);
+		triggerFatalError('[plugin.personal_best_medals.php] Unmet requirements! With your current configuration you need to activate "'. $plugin .'" in your "plugins.xml" to run this Plugin!');
 	}
 	unset($state, $installed_plugin);
 

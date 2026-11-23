@@ -71,7 +71,7 @@ function p2p_setup($aseco) { //Read pay2play.xml and load settings
 		}
       
 	} else {
-		trigger_error('[Pay2Play] Could not read/parse settings file pay2play.xml!', E_USER_ERROR);
+		triggerFatalError('[Pay2Play] Could not read/parse settings file pay2play.xml!');
 		return false;
 	}
 }
@@ -86,7 +86,7 @@ function p2p_maintain($aseco) { 	// Do maintenance checks
   );
   
   if (!in_array('plugin.rasp_jukebox.php', $aseco->plugins)) {
-  	trigger_error('[Pay2Play] This plugin requires the rasp jukebox. Please activate "plugin.rasp_jukebox.php" in your plugins.xml file!', E_USER_ERROR);
+  	triggerFatalError('[Pay2Play] This plugin requires the rasp jukebox. Please activate "plugin.rasp_jukebox.php" in your plugins.xml file!');
   }
 }
 

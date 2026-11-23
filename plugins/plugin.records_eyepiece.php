@@ -263,21 +263,21 @@ function re_onSync ($aseco, $reload = null) {
 			XASECO_VERSION
 		);
 		if ( version_compare($version, $xaseco_min_version, '<') ) {
-			trigger_error('[plugin.records_eyepiece.php] Not supported XAseco version ('. $version .')! Please update to min. version '. $xaseco_min_version .'!', E_USER_ERROR);
+			triggerFatalError('[plugin.records_eyepiece.php] Not supported XAseco version ('. $version .')! Please update to min. version '. $xaseco_min_version .'!');
 		}
 	}
 	else {
-		trigger_error('[plugin.records_eyepiece.php] Can not identify the System, "XASECO_VERSION" is unset! This plugin runs only with XAseco/'. $xaseco_min_version .'+', E_USER_ERROR);
+		triggerFatalError('[plugin.records_eyepiece.php] Can not identify the System, "XASECO_VERSION" is unset! This plugin runs only with XAseco/'. $xaseco_min_version .'+');
 	}
 
 	if ($aseco->server->getGame() != 'TMF') {
-		trigger_error('[plugin.records_eyepiece.php] This plugin supports only TMF, can not start with a "'. $aseco->server->getGame() .'" Dedicated-Server!', E_USER_ERROR);
+		triggerFatalError('[plugin.records_eyepiece.php] This plugin supports only TMF, can not start with a "'. $aseco->server->getGame() .'" Dedicated-Server!');
 	}
 
 
 	// Read Configuration
 	if (!$re_config = $aseco->xml_parser->parseXML('records_eyepiece.xml', true, true)) {
-		trigger_error('[plugin.records_eyepiece.php] Could not read/parse config file "records_eyepiece.xml"!', E_USER_ERROR);
+		triggerFatalError('[plugin.records_eyepiece.php] Could not read/parse config file "records_eyepiece.xml"!');
 	}
 	$re_config = $re_config['RECORDS_EYEPIECE'];
 
@@ -506,7 +506,7 @@ function re_onSync ($aseco, $reload = null) {
 			}
 			$state['position'] ++;			// Count the Plugin position for next check below
 		}
-		trigger_error('[plugin.records_eyepiece.php] Unmet requirements! With your current configuration you need to activate "'. $plugin .'" in your "plugins.xml" to run this Plugin!', E_USER_ERROR);
+		triggerFatalError('[plugin.records_eyepiece.php] Unmet requirements! With your current configuration you need to activate "'. $plugin .'" in your "plugins.xml" to run this Plugin!');
 	}
 	unset($state, $installed_plugin);
 
@@ -516,7 +516,7 @@ function re_onSync ($aseco, $reload = null) {
 		foreach ($aseco->plugin_versions as &$installed_plugin) {
 			if ( ($installed_plugin['plugin'] == 'plugin.ultimania.php') && ($installed_plugin['author'] == 'undef.de') ) {
 				if ( version_compare('0.2.1', $installed_plugin['version'], '>') ) {
-					trigger_error('[plugin.records_eyepiece.php] Unmet requirements! This Plugin require min. 0.2.1 of "plugin.ultimania.php", please update!', E_USER_ERROR);
+					triggerFatalError('[plugin.records_eyepiece.php] Unmet requirements! This Plugin require min. 0.2.1 of "plugin.ultimania.php", please update!');
 				}
 			}
 		}
@@ -538,7 +538,7 @@ function re_onSync ($aseco, $reload = null) {
 			continue;
 		}
 		if ($state['position'] > $eyepiece_position) {
-			trigger_error('[plugin.records_eyepiece.php] This Plugin must placed behind "'. $plugin .'", otherwise you can see mysterious results!', E_USER_ERROR);
+			triggerFatalError('[plugin.records_eyepiece.php] This Plugin must placed behind "'. $plugin .'", otherwise you can see mysterious results!');
 		}
 	}
 	unset($plugin, $state, $required, $eyepiece_position);
@@ -562,7 +562,7 @@ function re_onSync ($aseco, $reload = null) {
 		foreach ($aseco->plugins as &$installed_plugin) {
 			if ($plugin == $installed_plugin) {
 				// Found, trigger error
-				trigger_error('[plugin.records_eyepiece.php] This Plugin can not run with "'. $plugin .'" together, you have to remove "'. $plugin .'" from plugins.xml or deactivate the related Widget in records_eyepiece.xml!', E_USER_ERROR);
+				triggerFatalError('[plugin.records_eyepiece.php] This Plugin can not run with "'. $plugin .'" together, you have to remove "'. $plugin .'" from plugins.xml or deactivate the related Widget in records_eyepiece.xml!');
 			}
 		}
 	}
@@ -679,7 +679,7 @@ function re_onSync ($aseco, $reload = null) {
 			$message = str_replace('{br}', "%0A", $message);  // split long message
 			$message = $aseco->formatColors($message);
 			if (strlen($message) >= 256) {
-				trigger_error('[plugin.records_eyepiece.php] The <messages><winning_mail_body> is '. strlen($message) .' signs long (incl. the replaced placeholder), please remove '. (strlen($message) - 256) .' signs to fit into 256 signs limit!', E_USER_ERROR);
+				triggerFatalError('[plugin.records_eyepiece.php] The <messages><winning_mail_body> is '. strlen($message) .' signs long (incl. the replaced placeholder), please remove '. (strlen($message) - 256) .' signs to fit into 256 signs limit!');
 			}
 		}
 		else {
@@ -2145,7 +2145,7 @@ function re_onSync ($aseco, $reload = null) {
 	if ($re_config['DONATION_WIDGET'][0]['ENABLED'][0] == true) {
 		$val = explode(',', $re_config['DONATION_WIDGET'][0]['AMOUNTS'][0]);
 		if (count($val) < 7) {
-			trigger_error('[plugin.records_eyepiece.php] The amount of <donation_widget><amounts> is lower then the required min. of 7 in records_eyepiece.xml!', E_USER_ERROR);
+			triggerFatalError('[plugin.records_eyepiece.php] The amount of <donation_widget><amounts> is lower then the required min. of 7 in records_eyepiece.xml!');
 		}
 		$re_cache['DonationWidget']['Default'] = re_buildDonationWidget('DEFAULT');
 		$re_cache['DonationWidget']['Loading'] = re_buildDonationWidget('LOADING');

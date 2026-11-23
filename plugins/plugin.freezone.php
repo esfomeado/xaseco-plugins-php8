@@ -49,7 +49,7 @@ class Freezone {
         $response = $this->wsInstance->execute('GET', '/manialive/version/check/239/index.json');
       } catch(FreezoneException $ex) {
         if($ex->getCode() == 401) {
-          trigger_error('[plugin.freezone.php] API Password wrong or server not registered for freezone! Check the freezone:servers manialink.', E_USER_ERROR);
+          triggerFatalError('[plugin.freezone.php] API Password wrong or server not registered for freezone! Check the freezone:servers manialink.');
         }
       }
       $this->MLVersion = $response->version->revision;
@@ -78,7 +78,7 @@ class Freezone {
     $this->debuginfo = (strtoupper($this->xml->webservices->debuginfo) == 'TRUE' ? true : false);
     $this->debugmode = (strtoupper($this->xml->webservices->debugmode) == 'TRUE' ? true : false);
     if($this->wsPassword == "") {
-      trigger_error('[plugin.freezone.php] Please set freezone.webservices.password in freezone.xml!', E_USER_ERROR);
+      triggerFatalError('[plugin.freezone.php] Please set freezone.webservices.password in freezone.xml!');
     }
     $this->button['background_style'] = strval($this->xml->button->background_style);
     $this->button['background_substyle'] = strval($this->xml->button->background_substyle);

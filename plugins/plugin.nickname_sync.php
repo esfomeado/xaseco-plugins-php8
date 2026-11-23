@@ -67,15 +67,15 @@ function ns_onSync ($aseco) {
 			XASECO_VERSION
 		);
 		if ( version_compare($version, $xaseco_min_version, '<') ) {
-			trigger_error('[plugin.nickname_sync.php] Not supported XAseco version ('. $version .')! Please update to min. version '. $xaseco_min_version .'!', E_USER_ERROR);
+			triggerFatalError('[plugin.nickname_sync.php] Not supported XAseco version ('. $version .')! Please update to min. version '. $xaseco_min_version .'!');
 		}
 	}
 	else {
-		trigger_error('[plugin.nickname_sync.php] Can not identify the System, "XASECO_VERSION" is unset! This plugin runs only with XAseco/'. $xaseco_min_version .'+', E_USER_ERROR);
+		triggerFatalError('[plugin.nickname_sync.php] Can not identify the System, "XASECO_VERSION" is unset! This plugin runs only with XAseco/'. $xaseco_min_version .'+');
 	}
 
 	if ($aseco->server->getGame() != 'TMF') {
-		trigger_error('[plugin.nickname_sync.php] This plugin supports only TMF, can not start with a "'. $aseco->server->getGame() .'" Dedicated-Server!', E_USER_ERROR);
+		triggerFatalError('[plugin.nickname_sync.php] This plugin supports only TMF, can not start with a "'. $aseco->server->getGame() .'" Dedicated-Server!');
 	}
 
 
@@ -88,7 +88,7 @@ function ns_onSync ($aseco) {
 				continue 2;
 			}
 		}
-		trigger_error('[plugin.nickname_sync.php] Unmet requirements! You need to activate "' . $plugin . '" in your "plugins.xml" to run this Plugin!', E_USER_ERROR);
+		triggerFatalError('[plugin.nickname_sync.php] Unmet requirements! You need to activate "' . $plugin . '" in your "plugins.xml" to run this Plugin!');
 	}
 
 
