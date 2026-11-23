@@ -285,7 +285,7 @@ function pbme_onPlayerFinish1 ($aseco, $finish_item) {
 				$xml .= '<manialink id="'. $pbme_config['ManialinkId'] .'02">';
 				$xml .= '<frame posn="'. $pbme_config['NEW_MEDAL_WIDGET'][0]['POS_X'][0] .' '. $pbme_config['NEW_MEDAL_WIDGET'][0]['POS_Y'][0] .' 2">';
 				$xml .= '<quad posn="0 0 0.02" sizen="4.5 4.5" style="MedalsBig" substyle="'. $player_medal['medal'] .'"/>';
-				$xml .= '<label posn="5.5 -2.25 0.03" sizen="65 4.5" valign="center" textsize="'. $pbme_config['NEW_MEDAL_WIDGET'][0]['TEXTSIZE'][0] .'" textcolor="'. $pbme_config['NEW_MEDAL_WIDGET'][0]['TEXTCOLOR'][0]['DEFAULT'][0] .'F" text="$SPlayer $'. $pbme_config['NEW_MEDAL_WIDGET'][0]['TEXTCOLOR'][0]['HIGHLITE'][0] . stripColors($finish_item->player->nickname) .'$Z$S '. $time_msg . $player_medal['name'] .' medal!"/>';
+				$xml .= '<label posn="5.5 -2.25 0.03" sizen="65 4.5" valign="center" textsize="'. $pbme_config['NEW_MEDAL_WIDGET'][0]['TEXTSIZE'][0] .'" textcolor="'. $pbme_config['NEW_MEDAL_WIDGET'][0]['TEXTCOLOR'][0]['DEFAULT'][0] .'F" text="$SPlayer $'. $pbme_config['NEW_MEDAL_WIDGET'][0]['TEXTCOLOR'][0]['HIGHLITE'][0] . pbme_handleSpecialChars(stripColors($finish_item->player->nickname)) .'$Z$S '. $time_msg . $player_medal['name'] .' medal!"/>';
 				$xml .= '</frame>';
 				$xml .= '</manialink>';
 				$xml .= '</manialinks>';
