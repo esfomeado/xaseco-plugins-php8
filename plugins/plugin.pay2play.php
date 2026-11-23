@@ -249,6 +249,11 @@ function p2p_click($aseco, $command) {  //Deal with button clicks
 	
 	$login = $command[1];
 	$answer = $command[2];
+	// only our own buttons, and only for enabled features (this handler sees
+	// every click on the server; the player info costs a server call)
+	if (!($answer == $p2p['manialink'].'00' && $p2p['replay']['active']) &&
+	    !($answer == $p2p['manialink'].'01' && $p2p['skip']['active']))
+		return;
 	$aseco->client->query('GetDetailedPlayerInfo', $login);
 	$player = $aseco->client->getResponse();
 	$nickname = $player['NickName'];
